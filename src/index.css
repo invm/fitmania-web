@@ -1,0 +1,102 @@
+:root {
+  --gradient: linear-gradient(152deg, #0066ff 0%, #00acff 41%, #3ec21d 100%);
+  --primary: #0068ff;
+  --secondary: #3ec21d;
+  --dark: #011627;
+  --light: #00acff;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  height: 100%;
+}
+
+
+.font-mont {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bg-gradient {
+  background: var(--gradient);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-dark {
+  background-color: var(--dark);
+}
+
+.bg-light {
+  background-color: var(--light);
+}
+
+.text-gradient {
+  color: var(--gradient);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-dark {
+  color: var(--dark);
+}
+
+.text-light {
+  color: var(--light);
+}
+
+.white-text {
+  color: white;
+}
+
+.medium {
+  font-weight: 500;
+}
+
+.semibold {
+  font-weight: 600;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.extrabold {
+  font-weight: 800;
+}
+
+.fade {
+  animation: fade-in 0.2s ease-in;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.rounded-border {
+  border-radius: 5px;
+}
