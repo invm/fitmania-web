@@ -7,6 +7,8 @@ export interface postsInitialState {
   postsExhausted: boolean;
   postsLoading: boolean;
   offset: number;
+  singlePostId: string;
+  singlePostLoading: boolean;
 }
 
 export const initialState: postsInitialState = {
@@ -14,6 +16,8 @@ export const initialState: postsInitialState = {
   postsLoading: false,
   postsExhausted: false,
   offset: 0,
+  singlePostId: '',
+  singlePostLoading: false,
 };
 
 export default function state(state = initialState, action: Action) {
@@ -30,9 +34,7 @@ export default function state(state = initialState, action: Action) {
         posts: action.payload.data,
         postsLoading: false,
         postsExhausted: action.payload.postsExhausted,
-        offset: !action.payload.postsExhausted
-          ? state.offset + 1
-          : state.offset,
+        offset: !action.payload.postsExhausted ? state.offset + 1 : state.offset,
       };
     default:
       return state;

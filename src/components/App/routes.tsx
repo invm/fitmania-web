@@ -1,17 +1,20 @@
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { PrivateRoute, PublicRoute } from '../common';
-import { Login, NotFound } from '../pages';
+import { Login, NotFound, Posts } from '../pages';
 
 interface IRoute {
   type: 'public' | 'private' | 'default';
   exact?: boolean;
   path: string;
-  component:
-    | React.ComponentType<RouteComponentProps<any>>
-    | React.ComponentType<any>;
+  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }
 
 const routes: IRoute[] = [
+  {
+    type: 'private',
+    path: '/',
+    component: Posts,
+  },
   {
     type: 'public',
     path: '/login',

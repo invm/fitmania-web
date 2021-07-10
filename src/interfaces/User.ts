@@ -9,6 +9,7 @@ interface IUser {
   preferable?: string[];
   undesirable?: string[];
   fcmToken?: string;
+  groups?: any[]; // FIXME:
 }
 
 export interface IUserMin {

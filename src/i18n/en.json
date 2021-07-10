@@ -72,7 +72,9 @@
       "title": "Share some thoughts or upload an image...",
       "create_post": "Create Post",
       "open_camera": "Open camera",
-      "open_gallery": "Open gallery"
+      "open_gallery": "Open gallery",
+      "cant_create_empty_post": "Can not create an empty post",
+      "event_time_too_early": "Please make an event at least 15 minutes from now."
     },
     "create_event": {
       "title": "Create an event, invite friends and groups and train together...",

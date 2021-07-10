@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { Link, RouteChildrenProps, RouteComponentProps } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { login, sendOTPorLogin, verifyOTP } from '../../../redux/actions/user';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -18,6 +18,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../common';
+import { RootState } from '../../../redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,11 +55,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
+const Login = ({ history }: RouteChildrenProps<{}>) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { isAuthenticated } = useSelector((state: typeof RootState) => state.user);
   const dispatch = useDispatch();
 
   const loginHandler = async ({ email, otp }: { email: string; otp?: string }) => {
@@ -76,6 +78,13 @@ const Login = () => {
       ...(otp && { otp }),
     });
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      history.push('/');
+    }
+    // eslint-disable-next-line
+  }, [isAuthenticated]);
 
   const loginSchema = Yup.object().shape({
     email: Yup.string().email(t('errors.invalid_email')).required(t('errors.required_field')),

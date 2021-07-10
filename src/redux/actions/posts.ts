@@ -11,7 +11,7 @@ export const setOffset = (offset: number) => (dispatch: Function) => {
 };
 
 export const getPosts =
-  ({ offset }: { offset: number }) =>
+  ({ offset, isEvent, selectedSports }: { offset: number; isEvent: number; selectedSports: string[] }) =>
   async (dispatch: Function) => {
     dispatch({ type: types.GET_POSTS_ATTEMPT });
 
@@ -107,17 +107,7 @@ export const deletePost = (_id: string) => async (dispatch: Function) => {
 };
 
 export const createPost =
-  ({
-    display,
-    image,
-    text,
-    group,
-  }: {
-    text: string;
-    image: any;
-    display: 'all' | 'friends';
-    group?: string;
-  }) =>
+  ({ display, image, text, group }: { text: string; image: any; display: string; group?: string }) =>
   async (dispatch: Function) => {
     dispatch({ type: types.CREATE_POST_ATTEMPT });
 
