@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Route,
-  Redirect,
-  RouteComponentProps,
-  RouteProps,
-} from 'react-router-dom';
+import { Route, Redirect, RouteComponentProps, RouteProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Spinner from './Spinner';
 import { RootState } from '../../redux';
@@ -13,13 +8,9 @@ const PublicRoute = ({
   component: Component,
   ...rest
 }: RouteProps & {
-  component:
-    | React.ComponentType<RouteComponentProps<any>>
-    | React.ComponentType<any>;
+  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }) => {
-  const { isAuthenticated, verifyingSession } = useSelector(
-    (state: typeof RootState) => state.user
-  );
+  const { isAuthenticated, verifyingSession } = useSelector((state: typeof RootState) => state.user);
   return (
     <Route
       {...rest}

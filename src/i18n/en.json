@@ -24,6 +24,23 @@
       "continue": "Continue",
       "skip": "Skip"
     },
+    "post": {
+      "view_details": "View post details",
+      "edit_post": "Edit post",
+      "delete_post": "Delete post",
+      "are_you_sure": "Are you sure?",
+      "joined": "joined",
+      "awaiting_admission": "Awaiting Admission",
+      "admit": "Admit",
+      "reject": "Reject",
+      "rejected": "Rejected",
+      "remove": "Remove",
+      "join": "Join",
+      "asked_to_join": "Asked to join",
+      "ask_to_join": "Ask to join",
+      "leave_event": "Leave event",
+      "share_some_thoughts": "Share some thoughts..."
+    },
     "create_profile": {
       "title": "Please enter some minimal information about yourself",
       "first_name": "First name",

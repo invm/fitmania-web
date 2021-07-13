@@ -8,13 +8,9 @@ const PrivateRoute = ({
   component: Component,
   ...rest
 }: {
-  component:
-    | React.ComponentType<RouteComponentProps<any>>
-    | React.ComponentType<any>;
+  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }) => {
-  const { isAuthenticated, verifyingSession } = useSelector(
-    (state: typeof RootState) => state.user
-  );
+  const { isAuthenticated, verifyingSession } = useSelector((state: typeof RootState) => state.user);
   return (
     <Route
       {...rest}

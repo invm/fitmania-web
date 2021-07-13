@@ -1,6 +1,6 @@
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { PrivateRoute, PublicRoute } from '../common';
-import { Login, NotFound, Posts } from '../pages';
+import * as PAGES from '../pages';
 
 interface IRoute {
   type: 'public' | 'private' | 'default';
@@ -13,17 +13,22 @@ const routes: IRoute[] = [
   {
     type: 'private',
     path: '/',
-    component: Posts,
+    component: PAGES.Posts,
   },
   {
     type: 'public',
     path: '/login',
-    component: Login,
+    component: PAGES.Login,
+  },
+  {
+    type: 'public',
+    path: '/register',
+    component: PAGES.Register,
   },
   {
     type: 'default',
     path: '/404',
-    component: NotFound,
+    component: PAGES.NotFound,
   },
 ];
 
@@ -42,6 +47,6 @@ export const getRoutes = () => {
         break;
     }
 
-    return <AppRoute key={i} {...rest} />;
+    return <AppRoute key={i} exact {...rest} />;
   });
 };

@@ -22,6 +22,17 @@ export const initialState: postsInitialState = {
 
 export default function state(state = initialState, action: Action) {
   switch (action.type) {
+		
+    case types.SET_POSTS:
+      return {
+        ...state,
+        posts: action.payload,
+      };
+    case types.SET_POSTS_OFFSET:
+      return {
+        ...state,
+        offset: action.payload,
+      };
     case types.CREATE_POST_SUCCESS:
       return { ...state, posts: [...state.posts, action.payload] };
     case types.GET_POSTS_ATTEMPT:

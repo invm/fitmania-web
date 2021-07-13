@@ -1,23 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import {
-  Grid,
-  Typography,
-  Checkbox,
-  FormControlLabel,
-  Button,
-  Card,
-  Avatar,
-  CardContent,
-  CardHeader,
-} from '@material-ui/core';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Grid, Typography, Checkbox, FormControlLabel, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import heroImage from '../../../assets/crossfit-box.jpg';
 import heroImage2 from '../../../assets/girls-running.jpg';
 
 import PageContainer from '../../common/Layout/PageContainer';
-import PostItem from './components/PostItem';
+import Post from './components/Post';
 import CreatePost from './components/CreatePost';
 
 // import { getPosts, getStatistics, clearPosts } from '../../actions/posts';
@@ -39,7 +28,7 @@ import { getPosts } from '../../../redux/actions';
 
 const images = [heroImage, heroImage2];
 
-const sports = {
+export const sports = {
   Running: <DirectionsRun />,
   Biking: <DirectionsBike />,
   Hiking: <DirectionsWalk />,
@@ -77,6 +66,7 @@ const Posts = () => {
   const {
     posts: { posts, postsLoading },
     // groups: { featuredGroupsLoading, featuredGroups }, // TODO:
+    user: { user },
   } = useSelector((state: typeof RootState) => state);
 
   const classes = useStyles();
@@ -132,6 +122,7 @@ const Posts = () => {
             style={{
               marginBottom: 20,
               fontWeight: 700,
+              color: 'white',
               textShadow: '1px 1px #444',
             }}
           >
@@ -141,6 +132,7 @@ const Posts = () => {
             variant="h4"
             style={{
               marginBottom: 10,
+              color: 'white',
               textShadow: '1px 1px #444',
             }}
           >
@@ -150,10 +142,11 @@ const Posts = () => {
             variant="h6"
             style={{
               marginBottom: 10,
+              color: 'white',
               textShadow: '1px 1px #444',
             }}
           >
-            Join local communities and train together to achieve your health goals and become a better self!
+            Join local communities, train, play, motivate and progress together!
           </Typography>
         </div>
       </div>
@@ -235,15 +228,14 @@ const Posts = () => {
           <Grid item xs={12} className={classes.list}>
             <CreatePost />
           </Grid>
-          {/* TODO: uncomment and fix */}
-          {/* <Grid item xs={12}>
+          <Grid item xs={12}>
             <Grid container direction="row" alignItems="center" justify="space-between" className={classes.list}>
               <Grid item xs={12}>
-                {createPostLoading && <Spinner />}
-                {posts.length > 0 && posts.map((post) => <PostItem key={post._id} postItem={post} />)}
+                {/* {createPostLoading && <Spinner />} */}
+                {posts.length > 0 && posts.map((post) => <Post key={post._id} {...{ post, user }} />)}
               </Grid>
             </Grid>
-          </Grid> */}
+          </Grid>
           <Grid item xs={12} container style={{ marginTop: 30, marginBottom: 30 }} justify="center">
             <Button
               disabled={postsLoading}
@@ -251,7 +243,7 @@ const Posts = () => {
               onClick={handleLoadMore}
               style={{ height: 40, width: 120 }}
             >
-              {postsLoading ? <Spinner size={1.3} /> : 'Load More'}
+              {postsLoading ? <Spinner size={0.3} /> : 'Load More'}
             </Button>
           </Grid>
         </Grid>
@@ -273,7 +265,7 @@ const styles = {
     borderRadius: 20,
     padding: 20,
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     marginBottom: 30,
     marginTop: 30,
   },

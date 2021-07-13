@@ -57,7 +57,6 @@ const App = () => {
           <PrivateRoute exact path="/search/:query" component={SearchResults} />
           <PrivateRoute exact path="/notifications" component={Notifications} />
           <PrivateRoute exact path="/posts/:id" component={SinglePost} /> */}
-          {/* <PublicRoute exact path="/register" component={Register} /> */}
           {getRoutes()}
           <Redirect path="*" to="/404" />
         </Switch>

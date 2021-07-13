@@ -8,7 +8,6 @@ interface IEvent {
     | 'Rugby'
     | 'Hiking'
     | 'Tennis';
-  initiator?: string;
   participants?: string[];
   limitParticipants?: number;
   pace?: string;

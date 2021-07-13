@@ -3,18 +3,26 @@ import { Methods, Request } from '../../utils/Wrapper';
 
 import * as types from '../types/posts';
 import { IObject } from '../../interfaces/Common';
+import IPost from '../../interfaces/Post';
+import { showMessage } from './message';
+import i18n from '../../i18n';
 
 const POSTS_LIMIT = 10;
 
 export const setOffset = (offset: number) => (dispatch: Function) => {
-  dispatch({ type: types.SET_OFFSET, payload: offset });
+  dispatch({ type: types.SET_POSTS_OFFSET, payload: offset });
+};
+
+export const setPosts = (payload: IPost[]) => (dispatch: Function) => {
+  dispatch({ type: types.SET_POSTS, payload });
 };
 
 export const getPosts =
-  ({ offset, isEvent, selectedSports }: { offset: number; isEvent: number; selectedSports: string[] }) =>
+  ({ offset, isEvent = 0, selectedSports = [] }: { offset: number; isEvent?: number; selectedSports?: string[] }) =>
   async (dispatch: Function) => {
     dispatch({ type: types.GET_POSTS_ATTEMPT });
 
+    // TODO: add sports
     let requestParams = {
       method: Methods.GET,
       endpoint: `/posts?offset=${offset}&limit=${POSTS_LIMIT}`,
@@ -91,14 +99,13 @@ export const deletePost = (_id: string) => async (dispatch: Function) => {
     endpoint: `/posts/${_id}`,
   };
   try {
-    let res = await Request(dispatch, requestParams);
+    await Request(dispatch, requestParams);
 
     dispatch({
       type: types.DELETE_POST_SUCCESS,
-      payload: {
-        data: res.data.data,
-      },
+      payload: _id,
     });
+    dispatch(getPost(_id));
   } catch (error) {
     dispatch({
       type: types.DELETE_POST_FAIL,
@@ -126,18 +133,17 @@ export const createPost =
       },
     };
     try {
-      let res = await Request(dispatch, requestParams);
+      await Request(dispatch, requestParams);
 
       dispatch({
         type: types.CREATE_POST_SUCCESS,
-        payload: res.data.data,
       });
-      return true;
+      dispatch(setPosts([]));
+      dispatch(getPosts({ offset: 0 }));
     } catch (error) {
       dispatch({
         type: types.CREATE_POST_FAIL,
       });
-      return false;
     }
   };
 
@@ -185,17 +191,294 @@ export const createEvent =
       body: data,
     };
     try {
-      let res = await Request(dispatch, requestParams);
+      await Request(dispatch, requestParams);
 
       dispatch({
         type: types.CREATE_POST_SUCCESS,
-        payload: {
-          data: res.data.data,
-        },
       });
+      dispatch(setPosts([]));
+      dispatch(getPosts({ offset: 0 }));
     } catch (error) {
       dispatch({
         type: types.CREATE_POST_FAIL,
       });
     }
   };
+
+export const askToJoinEvent = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/event/ask-to-join`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.ASKED_TO_JOIN_EVENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.ASKED_TO_JOIN_EVENT_FAIL,
+    });
+  }
+};
+
+export const admitToEvent = (postId: string, userId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/event/allow/${userId}`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.ASKED_TO_JOIN_EVENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.ASKED_TO_JOIN_EVENT_FAIL,
+    });
+  }
+};
+
+export const rejectJoinRequest = (postId: string, userId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/event/reject/${userId}`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.REJECT_FROM_EVENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.REJECT_FROM_EVENT_FAIL,
+    });
+  }
+};
+
+export const joinEvent = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/event/allow/`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.JOIN_EVENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.JOIN_EVENT_FAIL,
+    });
+  }
+};
+
+export const leaveEvent = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/event/leave/`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.LEAVE_EVENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.LEAVE_EVENT_FAIL,
+    });
+  }
+};
+
+export const removeFromRejectedList = (postId: string, userId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/event/remove-from-rejected/${userId}`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.REMOVE_FROM_REJECTED_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.REMOVE_FROM_REJECTED_FAIL,
+    });
+  }
+};
+
+export const sharePost = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/share`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.SHARE_POST_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.SHARE_POST_FAIL,
+    });
+  }
+};
+
+export const unsharePost = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/unshare`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.UNSHARE_POST_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.UNSHARE_POST_FAIL,
+    });
+  }
+};
+
+export const likePost = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/like`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.LIKE_POST_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.LIKE_POST_FAIL,
+    });
+  }
+};
+
+export const dislikePost = (postId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts/${postId}/like`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.DISLIKE_POST_SUCCESS,
+    });
+    dispatch(getPost(postId));
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.DISLIKE_POST_FAIL,
+    });
+  }
+};
+
+export const createComment = (postId: string, text: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.POST,
+    endpoint: `/posts/${postId}/comments`,
+    body: { text },
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.CREATE_COMMENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+    // TODO: get post comments
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.CREATE_COMMENT_FAIL,
+    });
+  }
+};
+
+export const editComment = (postId: string, commentId: string, text: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.PATCH,
+    endpoint: `/posts/${postId}/comments/${commentId}`,
+    body: { text },
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.UPDATE_COMMENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+    // TODO: get post comments
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.UPDATE_COMMENT_FAIL,
+    });
+  }
+};
+
+export const deleteComment = (postId: string, commentId: string) => async (dispatch: Function) => {
+  let requestParams = {
+    method: Methods.DELETE,
+    endpoint: `/posts/${postId}/comments/${commentId}`,
+  };
+
+  try {
+    await Request(dispatch, requestParams);
+
+    dispatch({
+      type: types.DELETE_COMMENT_SUCCESS,
+    });
+    dispatch(getPost(postId));
+    // TODO: get post comments
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    dispatch({
+      type: types.DELETE_COMMENT_FAIL,
+    });
+  }
+};
