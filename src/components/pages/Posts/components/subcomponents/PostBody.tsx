@@ -133,7 +133,7 @@ const PostBody = ({
                 <Close />
               </IconButton>
             )}
-            <CardMedia className={classes.media} image={`${process.env.MEDIA}${post.image}`} title={post.text} />
+            <CardMedia className={classes.media} image={`${process.env.REACT_APP_MEDIA}${post.image}`} title={post.text} />
           </Grid>
         )}
         <Grid item xs={12} md={post.image ? 7 : 12}>

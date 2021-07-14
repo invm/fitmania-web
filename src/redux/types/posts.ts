@@ -1,5 +1,4 @@
-export const SET_POSTS_OFFSET = 'SET_POSTS_OFFSET';
-export const SET_POSTS = 'SET_POSTS';
+export const RESET_POSTS = 'RESET_POSTS';
 
 export const GET_POSTS_ATTEMPT = 'GET_POSTS_ATTEMPT';
 export const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';

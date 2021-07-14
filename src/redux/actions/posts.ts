@@ -3,33 +3,31 @@ import { Methods, Request } from '../../utils/Wrapper';
 
 import * as types from '../types/posts';
 import { IObject } from '../../interfaces/Common';
-import IPost from '../../interfaces/Post';
 import { showMessage } from './message';
 import i18n from '../../i18n';
+import { RootState } from '..';
 
 const POSTS_LIMIT = 10;
 
-export const setOffset = (offset: number) => (dispatch: Function) => {
-  dispatch({ type: types.SET_POSTS_OFFSET, payload: offset });
-};
-
-export const setPosts = (payload: IPost[]) => (dispatch: Function) => {
-  dispatch({ type: types.SET_POSTS, payload });
+export const resetPosts = () => (dispatch: Function) => {
+  dispatch({ type: types.RESET_POSTS });
 };
 
 export const getPosts =
-  ({ offset, isEvent = 0, selectedSports = [] }: { offset: number; isEvent?: number; selectedSports?: string[] }) =>
-  async (dispatch: Function) => {
+  (sports: string[] = []) =>
+  async (dispatch: Function, getState: () => typeof RootState) => {
     dispatch({ type: types.GET_POSTS_ATTEMPT });
 
-    // TODO: add sports
+    const { offset } = getState().posts;
+
     let requestParams = {
       method: Methods.GET,
-      endpoint: `/posts?offset=${offset}&limit=${POSTS_LIMIT}`,
+      endpoint: `/posts?offset=${offset}&limit=${POSTS_LIMIT}${sports.map((v) => '&sports[]=' + v).join('')}`,
     };
+
     try {
       let res = await Request(dispatch, requestParams);
-
+      if (sports.length) await dispatch(resetPosts());
       dispatch({
         type: types.GET_POSTS_SUCCESS,
         payload: {
@@ -138,8 +136,8 @@ export const createPost =
       dispatch({
         type: types.CREATE_POST_SUCCESS,
       });
-      dispatch(setPosts([]));
-      dispatch(getPosts({ offset: 0 }));
+      dispatch(resetPosts());
+      dispatch(getPosts());
     } catch (error) {
       dispatch({
         type: types.CREATE_POST_FAIL,
@@ -196,8 +194,8 @@ export const createEvent =
       dispatch({
         type: types.CREATE_POST_SUCCESS,
       });
-      dispatch(setPosts([]));
-      dispatch(getPosts({ offset: 0 }));
+      dispatch(resetPosts());
+      dispatch(getPosts());
     } catch (error) {
       dispatch({
         type: types.CREATE_POST_FAIL,

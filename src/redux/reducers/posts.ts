@@ -22,16 +22,12 @@ export const initialState: postsInitialState = {
 
 export default function state(state = initialState, action: Action) {
   switch (action.type) {
-		
-    case types.SET_POSTS:
+    case types.RESET_POSTS:
       return {
         ...state,
-        posts: action.payload,
-      };
-    case types.SET_POSTS_OFFSET:
-      return {
-        ...state,
-        offset: action.payload,
+        offset: 0,
+        posts: [],
+        postsExhausted: false,
       };
     case types.CREATE_POST_SUCCESS:
       return { ...state, posts: [...state.posts, action.payload] };
@@ -42,7 +38,7 @@ export default function state(state = initialState, action: Action) {
     case types.GET_POSTS_SUCCESS:
       return {
         ...state,
-        posts: action.payload.data,
+        posts: [...state.posts, ...action.payload.data],
         postsLoading: false,
         postsExhausted: action.payload.postsExhausted,
         offset: !action.payload.postsExhausted ? state.offset + 1 : state.offset,

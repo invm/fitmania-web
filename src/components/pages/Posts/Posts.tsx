@@ -64,17 +64,13 @@ const useStyles = makeStyles((theme) => ({
 const Posts = () => {
   const dispatch = useDispatch();
   const {
-    posts: { posts, postsLoading },
+    posts: { posts, postsLoading, postsExhausted },
     // groups: { featuredGroupsLoading, featuredGroups }, // TODO:
     user: { user },
   } = useSelector((state: typeof RootState) => state);
 
   const classes = useStyles();
-  const [state, setState] = useState({
-    selectedSports: [] as string[],
-    offset: 0,
-    isEvent: 0,
-  });
+  const [sportsFilter, setSportsFilter] = useState<string[]>([]);
 
   // TODO:
   // useEffect(() => {
@@ -83,34 +79,19 @@ const Posts = () => {
   // }, []);
 
   useEffect(() => {
-    dispatch(getPosts(state));
-  }, [dispatch, state]);
+    dispatch(getPosts(sportsFilter));
+  }, [dispatch, sportsFilter]);
 
-  const handleSelectSport = (e: ChangeEvent<HTMLInputElement>) => {
-    // dispatch(clearPosts()); // TODO: add clear posts function
-    if (state.selectedSports.includes(e.target.value)) {
-      let obj = {
-        ...state,
-        selectedSports: state.selectedSports.filter((item) => item !== e.target.value),
-      };
-      if (state.selectedSports.length === 1) {
-        obj.isEvent = 0;
-      }
-      setState(obj);
-    } else {
-      let obj = {
-        ...state,
-        selectedSports: [...state.selectedSports, e.target.value],
-      };
-      if (state.selectedSports.length === 0) {
-        obj.isEvent = 1;
-      }
-      setState(obj);
-    }
+  const expandList = () => {
+    !postsExhausted && dispatch(getPosts());
   };
 
-  const handleLoadMore = () => {
-    setState({ ...state, offset: state.offset + 1 });
+  const handleSelectSport = (e: ChangeEvent<HTMLInputElement>) => {
+    if (sportsFilter.includes(e.target.value)) {
+      setSportsFilter(sportsFilter.filter((item) => item !== e.target.value));
+    } else {
+      setSportsFilter([...sportsFilter, e.target.value]);
+    }
   };
 
   return (
@@ -211,7 +192,7 @@ const Posts = () => {
                   <Checkbox
                     color={'primary'}
                     value={item[0]}
-                    checked={state.selectedSports.includes(item[0])}
+                    checked={sportsFilter.includes(item[0])}
                     onChange={handleSelectSport}
                     icon={item[1]}
                   />
@@ -221,7 +202,7 @@ const Posts = () => {
             ))}
             <Grid item xs={12}>
               <Typography align="center" variant="h5">
-                Showing results for {state.selectedSports.length > 0 ? state.selectedSports.join(', ') : 'all sports'}
+                Showing results for {sportsFilter.length > 0 ? sportsFilter.join(', ') : 'all sports'}
               </Typography>
             </Grid>
           </Grid>
@@ -238,12 +219,12 @@ const Posts = () => {
           </Grid>
           <Grid item xs={12} container style={{ marginTop: 30, marginBottom: 30 }} justify="center">
             <Button
-              disabled={postsLoading}
+              disabled={postsLoading || postsExhausted}
               variant="contained"
-              onClick={handleLoadMore}
-              style={{ height: 40, width: 120 }}
+              onClick={expandList}
+              style={{ height: 40, width: 150 }}
             >
-              {postsLoading ? <Spinner size={0.3} /> : 'Load More'}
+              {postsLoading ? <Spinner size={0.3} /> : postsExhausted ? 'No more posts' : 'Load More'}
             </Button>
           </Grid>
         </Grid>
