@@ -91,7 +91,8 @@
       "open_camera": "Open camera",
       "open_gallery": "Open gallery",
       "cant_create_empty_post": "Can not create an empty post",
-      "event_time_too_early": "Please make an event at least 15 minutes from now."
+      "event_time_too_early": "Please make an event at least 15 minutes from now.",
+      "please_fill_all_details": "Please fill all details"
     },
     "create_event": {
       "title": "Create an event, invite friends and groups and train together...",

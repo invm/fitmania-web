@@ -5,29 +5,30 @@ export const stripObject = (obj: IObject) => {
   return obj;
 };
 
-const buildFormData = (formData: FormData, data: any, parentKey?: string) => {
-  if (data && typeof data === 'object' && data?.uri) {
-    formData.append(parentKey ?? '', data);
-  } else if (
-    data &&
-    typeof data === 'object' &&
-    !(data instanceof Date) &&
-    !(data instanceof File)
-  ) {
-    Object.keys(data).forEach((key) => {
-      buildFormData(formData, data[key], parentKey ? `${parentKey}` : key);
-    });
-  } else {
-    const value = data == null ? '' : data;
-
-    formData.append(parentKey ?? '', value);
-  }
-};
-
-export const toFormData = (data: IObject) => {
+export const toFormData = (obj: IObject) => {
   const formData = new FormData();
 
-  buildFormData(formData, data);
+  Object.keys(obj).forEach(key => {
+    if (key === 'postImage') {
+      if (Array.isArray(obj[key])) {
+        obj[key].forEach((img: any, i: number) => {
+          formData.append(key, img, `${i}.jpeg`);
+        });
+      } else {
+        formData.append(key, obj[key], `${key}.jpeg`);
+      }
+    } else if (key && typeof obj[key] === 'object') {
+      Object.keys(obj[key]).forEach(k => {
+        formData.append(`${key}[${k}]`, obj[key][k]);
+      });
+    } else if (key && Array.isArray(obj[key])) {
+      obj[key].forEach((val: any) => {
+        formData.append(key, val);
+      });
+    } else if (key) {
+      formData.append(key, obj[key]);
+    }
+  });
 
   return formData;
 };

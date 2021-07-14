@@ -16,7 +16,7 @@ export interface Res {
 
 let instance = axios.create({
   baseURL: REACT_APP_API_URL,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: true,
   headers: {
     Accept: '*/*',
@@ -45,8 +45,6 @@ export default async function requestWrapper({
   try {
     // @ts-ignore
     let response = await instance?.[method](endpoint, method === 'DELETE' ? { data: body } : body);
-
-    console.log(response.headers);
 
     res = response;
     res.success = true; // Indicator for the caller to know that the request was processed successfully.

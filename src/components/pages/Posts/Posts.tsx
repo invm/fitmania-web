@@ -132,7 +132,7 @@ const Posts = () => {
         </div>
       </div>
       <Grid container>
-        {/* <Grid container item direction="column" justify="flex-start" alignItems="center" xs={12} sm={4} md={3}>
+        {/* <Grid container item direction="column" justifyContent="flex-start" alignItems="center" xs={12} sm={4} md={3}>
           <Grid item xs={12} style={{ paddingTop: '10px', width: '100%' }}>
             {!stats ? (
               <Spinner />
@@ -179,7 +179,7 @@ const Posts = () => {
           </Grid>
         </Grid> */}
         <Grid container item xs={12} sm={8} md={9}>
-          <Grid item xs={12} container justify="center">
+          <Grid item xs={12} container justifyContent="center">
             <Grid item xs={12}>
               <Typography align="center" variant="h5">
                 Filter events by sport
@@ -210,14 +210,14 @@ const Posts = () => {
             <CreatePost />
           </Grid>
           <Grid item xs={12}>
-            <Grid container direction="row" alignItems="center" justify="space-between" className={classes.list}>
+            <Grid container direction="row" alignItems="center" justifyContent="space-between" className={classes.list}>
               <Grid item xs={12}>
                 {/* {createPostLoading && <Spinner />} */}
                 {posts.length > 0 && posts.map((post) => <Post key={post._id} {...{ post, user }} />)}
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} container style={{ marginTop: 30, marginBottom: 30 }} justify="center">
+          <Grid item xs={12} container style={{ marginTop: 30, marginBottom: 30 }} justifyContent="center">
             <Button
               disabled={postsLoading || postsExhausted}
               variant="contained"

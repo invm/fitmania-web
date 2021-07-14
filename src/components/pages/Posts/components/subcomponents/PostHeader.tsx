@@ -127,11 +127,11 @@ const PostHeader = ({ post, user, setEditMode, editMode }: PostItemProps) => {
                         horizontal: 'center',
                       }}
                     >
-                      <Grid container justify="center">
-                        <Grid container item xs={12} justify="center">
+                      <Grid container justifyContent="center">
+                        <Grid container item xs={12} justifyContent="center">
                           <Typography>{t('post.are_you_sure')}</Typography>
                         </Grid>
-                        <Grid container item xs={12} justify="center">
+                        <Grid container item xs={12} justifyContent="center">
                           <Grid item>
                             <Button onClick={handlePostDelete}>Yes</Button>
                           </Grid>

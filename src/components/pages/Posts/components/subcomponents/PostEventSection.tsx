@@ -138,7 +138,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
             {post.event.participants.length}/{post.event.limitParticipants} {t('post.joined')}.
           </Typography>
         </Grid>
-        <Grid item xs={6} lg={4} container justify="center">
+        <Grid item xs={6} lg={4} container justifyContent="center">
           <Typography align="center" style={{ display: 'flex', alignItems: 'center' }}>
             {sports[post.event.eventType]}
             {`${post.event.eventType} at ${post.event.pace} pace`}

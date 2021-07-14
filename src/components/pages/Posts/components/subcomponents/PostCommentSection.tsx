@@ -118,7 +118,7 @@ const PostCommentSection = ({ post, user, commentToggle, setCommentToggle, expan
             post?.comments.map((comment) => (
               <Grid container key={comment._id}>
                 <Grid item container>
-                  <Grid container item xs={2} md={1} justify="center">
+                  <Grid container item xs={2} md={1} justifyContent="center">
                     <Link to={`/profile/${comment.user._id}`}>
                       <Avatar aria-label="user initials" className={classes.avatar}>
                         {comment.user.name[0].toUpperCase()}

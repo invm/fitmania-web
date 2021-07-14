@@ -17,6 +17,7 @@ import {
   Select,
   MenuItem,
   Tooltip,
+  CircularProgress,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import SendIcon from '@material-ui/icons/Send';
@@ -25,11 +26,12 @@ import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from 
 import DateFnsUtils from '@date-io/date-fns';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { createPost } from '../../../../redux/actions';
+import { createPost, CreatePostFunctionProps } from '../../../../redux/actions';
 import { showMessage } from '../../../../redux/actions';
 import { RootState } from '../../../../redux';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { useTranslation } from 'react-i18next';
+import { IObject } from '../../../../interfaces/Common';
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -56,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const initialState = {
+const initialState: IObject & { imgURI: string | ArrayBuffer | null } = {
   text: '',
   imgURI: '',
   image: {} as File,
@@ -70,24 +72,24 @@ const initialState = {
 };
 
 const CreatePost = () => {
+  // TODO: refactor into smaller pieces!
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { user } = useSelector((state: typeof RootState) => state.user);
   const classes = useStyles();
   const [state, setState] = useState(initialState);
-  const [workoutChecked, setWorkoutChecked] = useState(false);
-  const [privateChecked, setPrivateChecked] = useState(false);
-  const [openEvent, setOpenEvent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   // File input ref
-  const inputEl = useRef<HTMLInputElement>(null);
+  let inputEl = useRef<HTMLInputElement>(null);
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    setWorkoutChecked(event?.target?.checked);
+    setState((s) => ({ ...s, workoutChecked: event?.target?.checked }));
   };
 
   const onChange = (e: ChangeEvent<{ name?: any; value: number | string | unknown; id?: string }>) => {
-    if (e.target.id === 'participants-limit' && typeof e.target.value === 'number' && e.target.value > 0) {
+    if (e.target.id === 'participants-limit' && Number(e.target.value) > 0) {
       setState({ ...state, limitParticipants: Number(e.target.value) });
     } else {
       setState({
@@ -98,45 +100,48 @@ const CreatePost = () => {
   };
 
   const handlePrivateCheckboxChange = () => {
-    setPrivateChecked(!privateChecked);
+    setState((s) => ({ ...s, privateChecked: !s.privateChecked }));
   };
   const handleOpenEventCheckboxChange = () => {
-    setOpenEvent(!openEvent);
+    setState((s) => ({ ...s, openEvent: !state.openEvent }));
   };
 
   const handlePostCreate = async () => {
-    let post = {
-      isEvent: workoutChecked,
+    let post: CreatePostFunctionProps = {
       text: state.text,
-      image: state.image,
-      display: privateChecked ? 'friends' : 'all',
+      display: state.privateChecked ? 'friends' : 'all',
       group: state.group,
     };
-    if (post.isEvent) {
+    if (state.imgURI) post.image = state.image;
+    if (state.workoutChecked) {
       post = {
         ...post,
-        // event: {
-        //   eventType: state.sport,
-        //   pace: state.pace,
-        //   startDate: selectedDate,
-        //   openEvent: openEvent,
-        //   limitParticipants: state.limitParticipants,
-        //   // location: {
-        //   //   type: 'Point',
-        //   //   coordinates: [34.803042, 31.248062],
-        //   // },
-        // },
+        eventType: state.sport,
+        pace: state.pace,
+        startDate: selectedDate,
+        openEvent: state.openEvent,
+        limitParticipants: state.limitParticipants,
       };
     }
-    if (!post.text && !post.image) {
+    if (!post.text && !post?.image) {
       showMessage(t('common.error'), t('create_post.cant_create_empty_post'), 'error');
-    } else if (post.isEvent && selectedDate.getTime() - new Date().getTime() < 900000) {
+    } else if (
+      state.workoutChecked &&
+      (selectedDate.getTime() - new Date().getTime() < 900000 ||
+        !post.eventType ||
+        !post.limitParticipants ||
+        !post.pace ||
+        !post.startDate)
+    ) {
       showMessage(t('common.error'), t('create_post.event_time_too_early'), 'error');
+    } else if (state.workoutChecked && (!post.eventType || !post.limitParticipants || !post.pace || !post.startDate)) {
+      showMessage(t('common.error'), t('create_post.please_fill_all_details'), 'error');
     } else {
+      setLoading(true);
       await dispatch(createPost(post));
+      setLoading(false);
       setState(initialState);
-      setWorkoutChecked(false);
-      setPrivateChecked(false);
+      if (inputEl?.current?.value) inputEl.current.value = '';
       setSelectedDate(new Date());
     }
   };
@@ -145,19 +150,16 @@ const CreatePost = () => {
     var file = inputEl?.current && inputEl.current?.files && inputEl.current?.files?.[0];
     if (file && inputEl?.current?.files?.[0] !== null) {
       let reader = new FileReader();
-      // var url = reader.readAsDataURL(file); // TODO: remove?
+      reader.readAsDataURL(file);
       reader.onload = (ev) => {
-        if (typeof reader.result === 'string')
-          setState({
-            ...state,
-            imgURI: reader.result,
-            image: inputEl?.current?.files?.[0] ?? ({} as File),
-          });
+        setState({
+          ...state,
+          imgURI: reader.result,
+          image: inputEl?.current?.files?.[0] ?? ({} as File),
+        });
       };
     }
   };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateChange = (date: MaterialUiPickersDate) => {
     if (date && date.getTime() - new Date().getTime() < 900000) {
@@ -173,16 +175,20 @@ const CreatePost = () => {
       <CardHeader
         action={
           <Tooltip style={{ marginTop: '8px', marginRight: '8px' }} title="Publish your post!">
-            <IconButton onClick={handlePostCreate} aria-label="send">
-              <SendIcon />
-            </IconButton>
+            {loading ? (
+              <CircularProgress color="primary" size={30} />
+            ) : (
+              <IconButton disabled={loading} onClick={handlePostCreate} aria-label="send">
+                <SendIcon />
+              </IconButton>
+            )}
           </Tooltip>
         }
         title={"Share what's on your mind or start an event!"}
       />
       <CardContent className={classes.cardContent}>
-        <Grid container spacing={2}>
-          <Grid container item xs={12} md={6} alignItems="center">
+        <Grid container>
+          <Grid container item xs={12} md={8} lg={9} alignItems="center">
             <Grid item xs={10}>
               <TextField
                 className={classes.textarea}
@@ -197,8 +203,8 @@ const CreatePost = () => {
               />
             </Grid>
 
-            <Grid item xs={2} justify="center" container>
-              <Grid item xs={12} justify="center" container>
+            <Grid item xs={2} justifyContent="center" container>
+              <Grid item xs={12} justifyContent="center" container>
                 <input
                   accept="image/*"
                   ref={inputEl}
@@ -209,14 +215,14 @@ const CreatePost = () => {
                   type="file"
                 />
                 <label htmlFor="raised-button-file">
-                  <Button className={classes.camera} component="span">
+                  <Button disabled={loading} className={classes.camera} component="span">
                     <CameraAltIcon />
                   </Button>
                 </label>
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item sm={12} md={3} alignItems="center">
+          <Grid container item sm={12} md={4} lg={3} alignItems="center">
             <FormControlLabel
               control={
                 <Checkbox
@@ -262,13 +268,13 @@ const CreatePost = () => {
             </Grid>
           )}
         </Grid>
-        {state.imgURI && (
+        {!!state.imgURI && (
           <Grid item xs={12} md={6}>
-            <CardMedia className={classes.media} image={state.imgURI} />
+            <CardMedia className={classes.media} image={`${state.imgURI}`} />
           </Grid>
         )}
       </CardContent>
-      <Collapse in={workoutChecked} timeout={300} unmountOnExit>
+      <Collapse in={state.workoutChecked} timeout={300} unmountOnExit>
         <CardContent>
           <Typography paragraph>Please specify the type of activity you are planning on:</Typography>
           <Grid container>
@@ -342,7 +348,7 @@ const CreatePost = () => {
           </Grid>
 
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="space-around">
+            <Grid container justifyContent="space-around">
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"

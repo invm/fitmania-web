@@ -1,7 +1,7 @@
 import * as types from '../types/message';
 import store from '../index';
 
-const MESSAGE_VISIBILITY_TIME = 3000;
+const MESSAGE_IN_REDUCER_TIME = 1000;
 
 export const showMessage = (
   title: string = 'Success',
@@ -12,9 +12,15 @@ export const showMessage = (
     type: types.SHOW_MESSAGE,
     payload: { title, message, type },
   });
+};
+
+export const hideMessage = () => {
+  store.dispatch({
+    type: types.HIDE_MESSAGE,
+  });
   setTimeout(() => {
     removeMessage();
-  }, MESSAGE_VISIBILITY_TIME);
+  }, MESSAGE_IN_REDUCER_TIME);
 };
 
 export const removeMessage = () => {

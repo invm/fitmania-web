@@ -231,7 +231,7 @@ const Register = ({ history }: RouteChildrenProps<{}>) => {
                   </>
                 )}
               </Grid>
-              <Grid container justify="flex-end">
+              <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link to="/">Already have an account? Sign in</Link>
                 </Grid>

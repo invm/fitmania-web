@@ -205,7 +205,7 @@ const PostBody = ({
                     </>
                   )}
                 </Grid>
-                <Grid container item xs={8} md={10} justify="flex-end">
+                <Grid container item xs={8} md={10} justifyContent="flex-end">
                   <Tooltip title="Comment">
                     <IconButton
                       onClick={() => setCommentToggle(!commentToggle)}

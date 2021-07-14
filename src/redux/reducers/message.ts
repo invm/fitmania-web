@@ -17,6 +17,11 @@ export const initialState: messageInitialState = {
 
 export default function state(state = initialState, action: Action) {
   switch (action.type) {
+    case types.HIDE_MESSAGE:
+      return {
+        ...state,
+        open: false,
+      };
     case types.SHOW_MESSAGE:
       return {
         ...state,

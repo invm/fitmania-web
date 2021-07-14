@@ -29,8 +29,6 @@ export default function state(state = initialState, action: Action) {
         posts: [],
         postsExhausted: false,
       };
-    case types.CREATE_POST_SUCCESS:
-      return { ...state, posts: [...state.posts, action.payload] };
     case types.GET_POSTS_ATTEMPT:
       return { ...state, postsLoading: true };
     case types.GET_POSTS_FAIL:

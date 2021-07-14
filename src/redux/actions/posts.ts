@@ -111,14 +111,44 @@ export const deletePost = (_id: string) => async (dispatch: Function) => {
   }
 };
 
+export interface CreatePostFunctionProps {
+  text: string;
+  image?: any;
+  display: string;
+  group?: string;
+  eventType?: string;
+  pace?: string;
+  startDate?: Date;
+  openEvent?: boolean;
+  limitParticipants?: number;
+}
+
 export const createPost =
-  ({ display, image, text, group }: { text: string; image: any; display: string; group?: string }) =>
+  ({
+    display,
+    text,
+    image,
+    eventType,
+    limitParticipants,
+    openEvent,
+    pace,
+    startDate,
+    group,
+  }: CreatePostFunctionProps) =>
   async (dispatch: Function) => {
     dispatch({ type: types.CREATE_POST_ATTEMPT });
 
-    let obj: IObject = { display, postImage: image, text };
-
-    if (group) obj['group'] = group;
+    let obj: IObject = {
+      display,
+      text,
+      ...(image && { postImage: image }),
+      ...(eventType && { eventType }),
+      ...(limitParticipants && { limitParticipants }),
+      ...(openEvent !== undefined && { openEvent }),
+      ...(pace && { pace }),
+      ...(startDate && { startDate }),
+      ...(group && { group }),
+    };
 
     const data = toFormData(obj);
 
@@ -130,6 +160,7 @@ export const createPost =
         'Content-Type': 'multipart/form-data; ',
       },
     };
+
     try {
       await Request(dispatch, requestParams);
 
