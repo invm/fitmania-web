@@ -26,7 +26,7 @@ import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from 
 import DateFnsUtils from '@date-io/date-fns';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { createPost, CreatePostFunctionProps } from '../../../../redux/actions';
+import { createPost, CreatePostFunctionProps, getPosts, resetPosts } from '../../../../redux/actions';
 import { showMessage } from '../../../../redux/actions';
 import { RootState } from '../../../../redux';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
@@ -138,11 +138,15 @@ const CreatePost = () => {
       showMessage(t('common.error'), t('create_post.please_fill_all_details'), 'error');
     } else {
       setLoading(true);
-      await dispatch(createPost(post));
+      let success = await createPost(post);
+      if (success) {
+        dispatch(resetPosts());
+        dispatch(getPosts());
+        setState(initialState);
+        if (inputEl?.current?.value) inputEl.current.value = '';
+        setSelectedDate(new Date());
+      }
       setLoading(false);
-      setState(initialState);
-      if (inputEl?.current?.value) inputEl.current.value = '';
-      setSelectedDate(new Date());
     }
   };
 
@@ -311,10 +315,8 @@ const CreatePost = () => {
                   label="Pace"
                 >
                   <MenuItem value={'Easy'}>Easy</MenuItem>
-                  <MenuItem value={'Light'}>Light</MenuItem>
                   <MenuItem value={'Medium'}>Medium</MenuItem>
                   <MenuItem value={'Fast'}>Fast</MenuItem>
-                  <MenuItem value={'Ultra'}>Ultra</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

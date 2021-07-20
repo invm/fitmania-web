@@ -5,7 +5,7 @@ import * as types from '../types/posts';
 import { IObject } from '../../interfaces/Common';
 import { showMessage } from './message';
 import i18n from '../../i18n';
-import { RootState } from '..';
+import store, { RootState } from '..';
 
 const POSTS_LIMIT = 10;
 
@@ -123,116 +123,51 @@ export interface CreatePostFunctionProps {
   limitParticipants?: number;
 }
 
-export const createPost =
-  ({
+export const createPost = async ({
+  display,
+  text,
+  image,
+  eventType,
+  limitParticipants,
+  openEvent,
+  pace,
+  startDate,
+  group,
+}: CreatePostFunctionProps) => {
+  let obj: IObject = {
     display,
     text,
-    image,
-    eventType,
-    limitParticipants,
-    openEvent,
-    pace,
-    startDate,
-    group,
-  }: CreatePostFunctionProps) =>
-  async (dispatch: Function) => {
-    dispatch({ type: types.CREATE_POST_ATTEMPT });
-
-    let obj: IObject = {
-      display,
-      text,
-      ...(image && { postImage: image }),
-      ...(eventType && { eventType }),
-      ...(limitParticipants && { limitParticipants }),
-      ...(openEvent !== undefined && { openEvent }),
-      ...(pace && { pace }),
-      ...(startDate && { startDate }),
-      ...(group && { group }),
-    };
-
-    const data = toFormData(obj);
-
-    let requestParams = {
-      method: Methods.POST,
-      endpoint: `/posts/`,
-      body: data,
-      headers: {
-        'Content-Type': 'multipart/form-data; ',
-      },
-    };
-
-    try {
-      await Request(dispatch, requestParams);
-
-      dispatch({
-        type: types.CREATE_POST_SUCCESS,
-      });
-      dispatch(resetPosts());
-      dispatch(getPosts());
-    } catch (error) {
-      dispatch({
-        type: types.CREATE_POST_FAIL,
-      });
-    }
+    ...(image && { postImage: image }),
+    ...(eventType && { eventType }),
+    ...(limitParticipants && { limitParticipants }),
+    ...(openEvent !== undefined && { openEvent }),
+    ...(pace && { pace }),
+    ...(startDate && { startDate }),
+    ...(group && { group }),
   };
 
-export const createEvent =
-  (event: {
-    [key: string]: any;
-    text: string;
-    image?: any;
-    display: 'all' | 'friends';
-    group?: string;
-    event: {
-      [key: string]: any;
-      eventType: string;
-      address: string;
-      coordinates: number[];
-      startDate: Date;
-      limitParticipants: number;
-      pace: string;
-    };
-  }) =>
-  async (dispatch: Function) => {
-    dispatch({ type: types.CREATE_POST_ATTEMPT });
+	console.log('149',obj);
+	
 
-    const data = new FormData();
+  const data = toFormData(obj);
 
-    for (let dataKey in event) {
-      if (dataKey === 'event') {
-        // append nested object
-        for (let key in event[dataKey]) {
-          if (key === 'coordinates') {
-            event['event']['coordinates'].forEach((coord, i) => {
-              data.append(`event[location][coordinates][${i}]`, `${coord}`);
-            });
-          }
-          data.append(`event[${key}]`, event[dataKey][key]);
-        }
-      } else {
-        data.append(dataKey, event[dataKey]);
-      }
-    }
-
-    let requestParams = {
-      method: Methods.POST,
-      endpoint: `/posts/`,
-      body: data,
-    };
-    try {
-      await Request(dispatch, requestParams);
-
-      dispatch({
-        type: types.CREATE_POST_SUCCESS,
-      });
-      dispatch(resetPosts());
-      dispatch(getPosts());
-    } catch (error) {
-      dispatch({
-        type: types.CREATE_POST_FAIL,
-      });
-    }
+  let requestParams = {
+    method: Methods.POST,
+    endpoint: `/posts/`,
+    body: data,
+    headers: {
+      'Content-Type': 'multipart/form-data; ',
+    },
   };
+
+  try {
+    await Request(store.dispatch, requestParams);
+    return true;
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+    return false;
+  }
+};
 
 export const askToJoinEvent = (postId: string) => async (dispatch: Function) => {
   let requestParams = {
