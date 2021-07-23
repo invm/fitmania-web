@@ -193,7 +193,7 @@ const Header = ({ toggleDrawer }: HeaderProps) => {
 
               <div className={classes.grow} />
               <div className={classes.sectionDesktop}>
-                <IconButton
+                {/* <IconButton
                   className={classes.link}
                   edge="end"
                   aria-label="change theme color"
@@ -203,7 +203,7 @@ const Header = ({ toggleDrawer }: HeaderProps) => {
                   onClick={() => dispatch(changeTheme())}
                 >
                   <Brightness6 />
-                </IconButton>
+                </IconButton> */}
                 {isAuthenticated && (
                   <>
                     {notificationsCount > 0 && (

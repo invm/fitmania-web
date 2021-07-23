@@ -32,6 +32,8 @@ import { RootState } from '../../../../redux';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { useTranslation } from 'react-i18next';
 import { IObject } from '../../../../interfaces/Common';
+import { PlacesAutocomplete } from '../../../common';
+import moment from 'moment-timezone';
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    width: '90%',
+    width: '95%',
   },
 }));
 
@@ -64,11 +66,13 @@ const initialState: IObject & { imgURI: string | ArrayBuffer | null } = {
   image: {} as File,
   sport: '',
   pace: '',
-  limitParticipants: 1,
+  limitParticipants: 2,
   group: '',
   workoutChecked: false,
   privateChecked: false,
   openEvent: false,
+  coordinates: [],
+  address: '',
 };
 
 const CreatePost = () => {
@@ -79,7 +83,7 @@ const CreatePost = () => {
   const classes = useStyles();
   const [state, setState] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date(moment().add(2, 'days').format()));
 
   // File input ref
   let inputEl = useRef<HTMLInputElement>(null);
@@ -121,6 +125,8 @@ const CreatePost = () => {
         startDate: selectedDate,
         openEvent: state.openEvent,
         limitParticipants: state.limitParticipants,
+        address: state.address,
+        coordinates: state.coordinates,
       };
     }
     if (!post.text && !post?.image) {
@@ -282,16 +288,16 @@ const CreatePost = () => {
         <CardContent>
           <Typography paragraph>Please specify the type of activity you are planning on:</Typography>
           <Grid container>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={6}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">Type Of Sport</InputLabel>
+                <InputLabel id="demo-simple-select-outlined-label">Activity</InputLabel>
                 <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
                   value={state.sport}
                   name={'sport'}
                   onChange={onChange}
-                  label="Type Of Sport"
+                  label="Activity"
                 >
                   <MenuItem value={'Tennis'}>Tennis</MenuItem>
                   <MenuItem value={'Hiking'}>Hiking</MenuItem>
@@ -303,7 +309,22 @@ const CreatePost = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid container item xs={12} md={6} alignItems="center">
+              <FormControl variant="outlined" className={classes.formControl}>
+                <div style={{ flex: 1 }}>
+                  <PlacesAutocomplete
+                    // @ts-ignore
+                    handleSelect={(address, coordinates) => {
+                      console.log(address, coordinates);
+
+                      setState((s) => ({ ...s, address, coordinates }));
+                    }}
+                    value={state.address}
+                  />
+                </div>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="demo-simple-select-outlined-label">Pace</InputLabel>
                 <Select
@@ -320,7 +341,7 @@ const CreatePost = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={4}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <TextField
                   id="participants-limit"
@@ -332,7 +353,7 @@ const CreatePost = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid container item xs={12} md={3} alignItems="center">
+            <Grid container item xs={12} md={4} alignItems="center">
               <Tooltip title="Open event means anybody can join your event, otherwise only your friends will be able to see and join this event.">
                 <FormControlLabel
                   control={

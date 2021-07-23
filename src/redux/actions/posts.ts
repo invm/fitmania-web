@@ -121,6 +121,8 @@ export interface CreatePostFunctionProps {
   startDate?: Date;
   openEvent?: boolean;
   limitParticipants?: number;
+	address?: string;
+  coordinates?: number[];
 }
 
 export const createPost = async ({
@@ -133,6 +135,8 @@ export const createPost = async ({
   pace,
   startDate,
   group,
+	coordinates,
+  address,
 }: CreatePostFunctionProps) => {
   let obj: IObject = {
     display,
@@ -144,10 +148,9 @@ export const createPost = async ({
     ...(pace && { pace }),
     ...(startDate && { startDate }),
     ...(group && { group }),
+		...(coordinates && { coordinates }),
+    ...(address && { address }),
   };
-
-	console.log('149',obj);
-	
 
   const data = toFormData(obj);
 
@@ -235,7 +238,7 @@ export const rejectJoinRequest = (postId: string, userId: string) => async (disp
 export const joinEvent = (postId: string) => async (dispatch: Function) => {
   let requestParams = {
     method: Methods.GET,
-    endpoint: `/posts/${postId}/event/allow/`,
+    endpoint: `/posts/${postId}/event/join/`,
   };
 
   try {

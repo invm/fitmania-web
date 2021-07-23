@@ -102,6 +102,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
     setEventLoading(true);
     await dispatch(joinEvent(post._id));
     setEventLoading(false);
+    setEventModalOpen(false);
   };
 
   const handleLeaveEvent = async () => {
@@ -118,38 +119,47 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
         style={{ padding: 8, marginTop: 8 }}
         className={post.event && 'bg-gradient rounded-border '}
       >
-        {new Date(post.event.startDate).getTime() - new Date().getTime() < 0 && (
-          <Grid item xs={6} lg={2}>
-            <Typography align="center">{'Past Event'}</Typography>
-          </Grid>
-        )}
-        {new Date(post.event.startDate).getTime() - new Date().getTime() > 0 && post.event && post.event.openEvent && (
-          <Grid item xs={6} lg={2}>
-            <Typography align="center">{'Free to join'}</Typography>
-          </Grid>
-        )}
-        {new Date(post.event.startDate).getTime() - new Date().getTime() > 0 && post.event && !post.event.openEvent && (
-          <Grid item xs={6} lg={2}>
-            <Typography align="center">{'Private Event'}</Typography>
-          </Grid>
-        )}
-        <Grid item xs={6} lg={2}>
-          <Typography align="center">
-            {post.event.participants.length}/{post.event.limitParticipants} {t('post.joined')}.
-          </Typography>
-        </Grid>
         <Grid item xs={6} lg={4} container justifyContent="center">
-          <Typography align="center" style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography align="center" style={{ display: 'flex', alignItems: 'center', color: 'white' }}>
             {sports[post.event.eventType]}
             {`${post.event.eventType} at ${post.event.pace} pace`}
           </Typography>
         </Grid>
+        {new Date(post.event.startDate).getTime() - new Date().getTime() < 0 && (
+          <Grid item xs={6} lg={2}>
+            <Typography style={{ color: 'white' }} align="center">
+              {'Past Event'}
+            </Typography>
+          </Grid>
+        )}
+        {new Date(post.event.startDate).getTime() - new Date().getTime() > 0 && post.event && post.event.openEvent ? (
+          <Grid item xs={6} lg={2}>
+            <Typography style={{ color: 'white' }} align="center">
+              {'Everybody can join'}
+            </Typography>
+          </Grid>
+        ) : new Date(post.event.startDate).getTime() - new Date().getTime() > 0 &&
+          post.event &&
+          !post.event.openEvent ? (
+          <Grid item xs={6} lg={2}>
+            <Typography style={{ color: 'white' }} align="center">
+              {'You may ask to join'}
+            </Typography>
+          </Grid>
+        ) : null}
+        <Grid item xs={6} lg={2}>
+          <Typography style={{ color: 'white' }} align="center">
+            {post.event.participants.length}/{post.event.limitParticipants} {t('post.joined')}.
+          </Typography>
+        </Grid>
         <Grid item xs={4} lg={3}>
-          <Typography align="center">{new Date(post.event.startDate).toLocaleString('en-GB').substr(0, 17)}</Typography>
+          <Typography style={{ color: 'white' }} align="center">
+            {new Date(post.event.startDate).toLocaleString('en-GB').substr(0, 17)}
+          </Typography>
         </Grid>
         <Grid item xs={2} lg={1}>
           <Typography align="center">
-            <IconButton onClick={handleEventModalOpen} aria-label="settings">
+            <IconButton style={{ color: 'white' }} onClick={handleEventModalOpen} aria-label="settings">
               <Info />
             </IconButton>
             <Modal
@@ -287,6 +297,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
                     {(post.event.openEvent &&
                       post.event.limitParticipants - post.event.participants.length > 0 &&
                       post.event.pendingApprovalParticipants.findIndex((item) => item._id === user._id) === -1 &&
+                      post.event.rejectedParticipants.findIndex((item) => item._id === user._id) === -1 &&
                       post.event.participants.findIndex((item) => item._id === user._id) === -1) ||
                     (post.event.openEvent &&
                       post.event.limitParticipants - post.event.participants.length > 0 &&

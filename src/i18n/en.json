@@ -41,6 +41,11 @@
       "leave_event": "Leave event",
       "share_some_thoughts": "Share some thoughts..."
     },
+    "components": {
+      "places_autocomplete": {
+        "address_not_found": "Address not found"
+      }
+    },
     "create_profile": {
       "title": "Please enter some minimal information about yourself",
       "first_name": "First name",
