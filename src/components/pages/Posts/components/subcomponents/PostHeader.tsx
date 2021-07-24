@@ -1,6 +1,6 @@
 import { Avatar, Button, CardHeader, Grid, IconButton, Popover, Typography } from '@material-ui/core';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import IPost from '../../../../../interfaces/Post';
 import { MoreVert, Edit, Delete, ViewHeadline } from '@material-ui/icons';
@@ -31,6 +31,7 @@ const PostHeader = ({ post, user, setEditMode, editMode }: PostItemProps) => {
   const [deleteAnchorEl, setDeleteAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const history = useHistory();
 
   const handlePopoverClick = (currentTarget: EventTarget & HTMLButtonElement) => {
     setPopoverAnchorEl(currentTarget);
@@ -52,8 +53,9 @@ const PostHeader = ({ post, user, setEditMode, editMode }: PostItemProps) => {
   const deleteOpen = Boolean(deleteAnchorEl);
   const deletePopoverId = deleteOpen ? 'delete-popover' : undefined;
 
-  const handlePostDelete = () => {
-    dispatch(deletePost(post._id));
+  const handlePostDelete = async () => {
+    await dispatch(deletePost(post._id));
+    history.push('/');
   };
 
   return (

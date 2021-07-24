@@ -79,8 +79,8 @@ const Posts = () => {
   // }, []);
 
   useEffect(() => {
-    dispatch(getPosts(sportsFilter));
-  }, [dispatch, sportsFilter]);
+    !postsExhausted && dispatch(getPosts(sportsFilter));
+  }, [dispatch, sportsFilter, postsExhausted]);
 
   const expandList = () => {
     !postsExhausted && dispatch(getPosts());
@@ -213,7 +213,9 @@ const Posts = () => {
             <Grid container direction="row" alignItems="center" justifyContent="space-between" className={classes.list}>
               <Grid item xs={12}>
                 {/* {createPostLoading && <Spinner />} */}
-                {posts.length > 0 && posts.map((post) => <Post key={post._id} {...{ post, user }} />)}
+                {posts.map((post) => (
+                  <Post key={post._id} {...{ post, user }} />
+                ))}
               </Grid>
             </Grid>
           </Grid>

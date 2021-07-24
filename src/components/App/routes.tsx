@@ -1,45 +1,73 @@
+/**
+ * All app routes are declared here, based on their type, which can be either public, private or default.
+ */
+
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { PrivateRoute, PublicRoute } from '../common';
 import * as PAGES from '../pages';
 
-interface IRoute {
-  type: 'public' | 'private' | 'default';
+interface IRouteMin {
   exact?: boolean;
   path: string;
   component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }
 
-const routes: IRoute[] = [
+enum RouteTypes {
+  public,
+  private,
+  default,
+}
+
+interface IRoute extends IRouteMin {
+  type: RouteTypes;
+}
+
+const PRIVATE: IRouteMin[] = [
   {
-    type: 'private',
     path: '/',
     component: PAGES.Posts,
+    exact: true,
   },
   {
-    type: 'public',
+    path: '/posts/:id',
+    component: PAGES.PostDetails,
+  },
+];
+
+const PUBLIC: IRouteMin[] = [
+  {
     path: '/login',
     component: PAGES.Login,
+    exact: true,
   },
   {
-    type: 'public',
     path: '/register',
     component: PAGES.Register,
+    exact: true,
   },
+];
+
+const DEFAULT: IRouteMin[] = [
   {
-    type: 'default',
     path: '/404',
     component: PAGES.NotFound,
   },
+];
+
+const routes: IRoute[] = [
+  ...PRIVATE.map((v) => ({ ...v, type: RouteTypes.private })),
+  ...PUBLIC.map((v) => ({ ...v, type: RouteTypes.public })),
+  ...DEFAULT.map((v) => ({ ...v, type: RouteTypes.default })),
 ];
 
 export const getRoutes = () => {
   return routes.map(({ type, ...rest }, i) => {
     let AppRoute;
     switch (type) {
-      case 'private':
+      case RouteTypes.private:
         AppRoute = PrivateRoute;
         break;
-      case 'public':
+      case RouteTypes.public:
         AppRoute = PublicRoute;
         break;
       default:
@@ -47,6 +75,6 @@ export const getRoutes = () => {
         break;
     }
 
-    return <AppRoute key={i} exact {...rest} />;
+    return <AppRoute key={i} {...rest} />;
   });
 };

@@ -315,8 +315,6 @@ const CreatePost = () => {
                   <PlacesAutocomplete
                     // @ts-ignore
                     handleSelect={(address, coordinates) => {
-                      console.log(address, coordinates);
-
                       setState((s) => ({ ...s, address, coordinates }));
                     }}
                     value={state.address}

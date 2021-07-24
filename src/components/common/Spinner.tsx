@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 const Spinner = ({ size = 1 }: { size?: number }) => (
-  <div style={{ display: 'flex', justifyContent: 'center' }}>
+  <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 50, paddingBottom: 50 }}>
     <lottie-player
       src="https://assets2.lottiefiles.com/packages/lf20_jk6c1n2n.json"
       background="transparent"
