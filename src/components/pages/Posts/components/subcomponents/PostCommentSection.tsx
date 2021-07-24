@@ -101,7 +101,7 @@ const PostCommentSection = ({ post, user, commentToggle, setCommentToggle, expan
             </Grid>
             <Grid item xs={2} md={1}>
               {creatingComment ? (
-                <Spinner />
+                <Spinner size={0.3} />
               ) : (
                 <IconButton onClick={handleCommentSend} style={{ marginLeft: '8px' }}>
                   <Send />

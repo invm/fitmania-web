@@ -226,25 +226,22 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
                               }}
                             >
                               <Typography>{item.name}</Typography>
-                              <div>
-                                {!eventLoading ? (
-                                  <>
-                                    <Button size="small" color="primary" onClick={() => handleAdmitToEvent(item._id)}>
-                                      {t('post.admit')}
-                                    </Button>
-                                    <Button
-                                      size="small"
-                                      color="primary"
-                                      onClick={() => handleRejectFromEvent(item._id)}
-                                    >
-                                      {t('post.reject')}
-                                    </Button>
-                                  </>
-                                ) : (
-                                  <CircularProgress color="primary" size={20} />
-                                )}
-                              </div>
                             </Link>
+
+                            <div style={{ display: 'flex' }}>
+                              {!eventLoading ? (
+                                <>
+                                  <Button size="small" color="primary" onClick={() => handleAdmitToEvent(item._id)}>
+                                    {t('post.admit')}
+                                  </Button>
+                                  <Button size="small" color="primary" onClick={() => handleRejectFromEvent(item._id)}>
+                                    {t('post.reject')}
+                                  </Button>
+                                </>
+                              ) : (
+                                <CircularProgress color="primary" size={20} />
+                              )}
+                            </div>
                           </AccordionDetails>
                         ))}
                       </Accordion>
