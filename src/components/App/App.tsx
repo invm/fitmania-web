@@ -51,8 +51,6 @@ const App = () => {
             component={UpdateGroup}
           /> */}
           {/* <PrivateRoute exact path="/groups/:id" component={GroupDetails} />
-          <PrivateRoute exact path="/profile" component={Profile} />
-          <PrivateRoute exact path="/profile/:id" component={Profile} />
           <PrivateRoute exact path="/friends" component={Friends} />
           <PrivateRoute exact path="/search/:query" component={SearchResults} />
           <PrivateRoute exact path="/notifications" component={Notifications} />

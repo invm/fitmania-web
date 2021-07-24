@@ -62,7 +62,7 @@ const PostHeader = ({ post, user, setEditMode, editMode }: PostItemProps) => {
     <CardHeader
       className={classes.cardHeader}
       avatar={
-        <Link to={`/profile/${post.author._id}`}>
+        <Link to={post.author._id === user._id ? `/profile` : `/user/${post.author._id}`}>
           <Avatar aria-label="user initials" className={classes.avatar}>
             {post.author?.name?.[0].toUpperCase()}
           </Avatar>
@@ -151,7 +151,7 @@ const PostHeader = ({ post, user, setEditMode, editMode }: PostItemProps) => {
         </>
       }
       title={
-        <Link to={`/profile/${post.author._id}`}>
+        <Link to={post.author._id === user._id ? `/profile` : `/user/${post.author._id}`}>
           {post.author?.name} {post.author?.lastname}
         </Link>
       }

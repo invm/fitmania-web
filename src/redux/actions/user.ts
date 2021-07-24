@@ -4,6 +4,8 @@ import { Dispatch } from 'react';
 import i18n from '../../i18n';
 import IUser from '../../interfaces/User';
 import { showMessage } from './message';
+import store from '..';
+import { POSTS_LIMIT } from './posts';
 const { REACT_APP_ENV } = process.env;
 
 export const changeTheme = () => (dispatch: Function) => {
@@ -259,4 +261,22 @@ export const sendOTPorLogin = async ({
 
     return err;
   }
+};
+
+export const getUser = async (id: string) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/user/${id}`,
+  };
+
+  return await Request(store.dispatch, requestParams);
+};
+
+export const getUsersPosts = async (id: string, offset: number) => {
+  let requestParams = {
+    method: Methods.GET,
+    endpoint: `/posts?offset=${offset}&limit=${POSTS_LIMIT}&userId=${id}`,
+  };
+
+  return await Request(store.dispatch, requestParams);
 };

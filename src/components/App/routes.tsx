@@ -32,6 +32,15 @@ const PRIVATE: IRouteMin[] = [
     path: '/posts/:id',
     component: PAGES.PostDetails,
   },
+  {
+    path: '/profile',
+    component: PAGES.MyProfile,
+    exact: true,
+  },
+  {
+    path: '/user/:id',
+    component: PAGES.UserProfile,
+  },
 ];
 
 const PUBLIC: IRouteMin[] = [

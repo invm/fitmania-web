@@ -10,6 +10,7 @@ interface IUser {
   undesirable?: string[];
   fcmToken?: string;
   groups?: any[]; // FIXME:
+  friends?: IUserMin[];
 }
 
 export interface IUserMin {

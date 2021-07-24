@@ -7,7 +7,7 @@ import { showMessage } from './message';
 import i18n from '../../i18n';
 import store, { RootState } from '..';
 
-const POSTS_LIMIT = 10;
+export const POSTS_LIMIT = 10;
 
 export const resetPosts = () => (dispatch: Function) => {
   dispatch({ type: types.RESET_POSTS });

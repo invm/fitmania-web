@@ -198,7 +198,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
                     </AccordionSummary>
                     {post.event.participants.map((item) => (
                       <AccordionDetails key={item._id}>
-                        <Link to={`/profile/${item._id}`}>
+                        <Link to={item._id === user._id ? `/profile` : `/user/${item._id}`}>
                           <Typography>{item.name}</Typography>
                         </Link>
                       </AccordionDetails>
@@ -218,7 +218,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
                         {post.event.pendingApprovalParticipants.map((item) => (
                           <AccordionDetails key={item._id}>
                             <Link
-                              to={`/profile/${item._id}`}
+                              to={item._id === user._id ? `/profile` : `/user/${item._id}`}
                               style={{
                                 width: '100%',
                                 display: 'flex',
@@ -260,7 +260,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
                         {post.event.rejectedParticipants.map((item) => (
                           <AccordionDetails key={item._id}>
                             <Link
-                              to={`/profile/${item._id}`}
+                              to={item._id === user._id ? `/profile` : `/user/${item._id}`}
                               style={{
                                 width: '100%',
                                 display: 'flex',

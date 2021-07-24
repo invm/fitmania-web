@@ -25,10 +25,11 @@ import {
 import { RootState } from '../../../redux';
 import { Spinner } from '../../common';
 import { getPosts } from '../../../redux/actions';
+import { IObject } from '../../../interfaces/Common';
 
 const images = [heroImage, heroImage2];
 
-export const sports = {
+export const sports: IObject = {
   Running: <DirectionsRun />,
   Biking: <DirectionsBike />,
   Hiking: <DirectionsWalk />,

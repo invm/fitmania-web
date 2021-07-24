@@ -119,14 +119,14 @@ const PostCommentSection = ({ post, user, commentToggle, setCommentToggle, expan
               <Grid container key={comment._id}>
                 <Grid item container>
                   <Grid container item xs={2} md={1} justifyContent="center">
-                    <Link to={`/profile/${comment.user._id}`}>
+                    <Link to={comment.user._id === user._id ? `/profile` : `/user/${comment.user._id}`}>
                       <Avatar aria-label="user initials" className={classes.avatar}>
                         {comment.user.name[0].toUpperCase()}
                       </Avatar>
                     </Link>
                   </Grid>
                   <Grid container item xs={10} md={4} direction="column">
-                    <Link to={`/profile/${comment.user._id}`}>
+                    <Link to={comment.user._id === user._id ? `/profile` : `/user/${comment.user._id}`}>
                       <Typography className={classes.small}>
                         {comment.user?.name} {comment.user?.lastname}
                       </Typography>
