@@ -133,7 +133,11 @@ const PostBody = ({
                 <Close />
               </IconButton>
             )}
-            <CardMedia className={classes.media} image={`${process.env.REACT_APP_MEDIA}${post.image}`} title={post.text} />
+            <CardMedia
+              className={classes.media}
+              image={`${process.env.REACT_APP_MEDIA}${post.image}`}
+              title={post.text}
+            />
           </Grid>
         )}
         <Grid item xs={12} md={post.image ? 7 : 12}>
@@ -198,7 +202,7 @@ const PostBody = ({
                       <Grid item xs={6}>
                         <Tooltip title="Share">
                           <IconButton aria-label="share" onClick={handleShare}>
-                            <Share />
+                            <Share color={post?.sharedBy?.includes(user._id) ? 'primary' : 'action'} />
                           </IconButton>
                         </Tooltip>
                       </Grid>

@@ -365,7 +365,7 @@ export const likePost = (postId: string) => async (dispatch: Function) => {
 export const dislikePost = (postId: string) => async (dispatch: Function) => {
   let requestParams = {
     method: Methods.GET,
-    endpoint: `/posts/${postId}/like`,
+    endpoint: `/posts/${postId}/dislike`,
   };
 
   try {
