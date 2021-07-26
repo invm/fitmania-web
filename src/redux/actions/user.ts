@@ -6,6 +6,7 @@ import IUser from '../../interfaces/User';
 import { showMessage } from './message';
 import store from '..';
 import { POSTS_LIMIT } from './posts';
+import { toFormData } from '../../utils/utils';
 const { REACT_APP_ENV } = process.env;
 
 export const changeTheme = () => (dispatch: Function) => {
@@ -151,59 +152,20 @@ export const createProfile =
     await dispatch(getProfile());
   };
 
-export const updateProfile =
-  (
-    profileData: object,
-    options: {
-      deleteProfilePicture?: boolean;
-      updateProfilePicture?: File;
-    }
-  ) =>
-  async (dispatch: Function) => {
-    if (options?.deleteProfilePicture) {
-      await dispatch(deleteProfilePicture());
-    }
+export const updateProfile = (profileData: object, history: any) => async (dispatch: Function) => {
+  let body = toFormData(profileData);
 
-    if (options?.updateProfilePicture) {
-      await dispatch(uploadProfilePicture(options.updateProfilePicture));
-    }
+  if (profileData) {
+    let requestParams = {
+      method: Methods.PATCH,
+      endpoint: `/user`,
+      body,
+    };
 
-    if (profileData) {
-      let requestParams = {
-        method: Methods.PATCH,
-        endpoint: `/user`,
-        body: {
-          ...profileData,
-        },
-      };
+    await Request(dispatch, requestParams);
+  }
 
-      await Request(dispatch, requestParams);
-    }
-
-    await dispatch(getProfile());
-  };
-
-export const uploadProfilePicture = (file: File) => async (dispatch: Function) => {
-  let formData = new FormData();
-
-  formData.append('profilePicture', file);
-
-  let requestParams = {
-    method: Methods.PUT,
-    endpoint: `/profile/picture`,
-    body: formData,
-  };
-
-  await Request(dispatch, requestParams);
-};
-
-export const deleteProfilePicture = () => async (dispatch: Function) => {
-  let requestParams = {
-    method: Methods.DELETE,
-    endpoint: `/profile/picture`,
-  };
-
-  await Request(dispatch, requestParams);
+  await dispatch(getProfile());
 };
 
 /**

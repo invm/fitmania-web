@@ -22,7 +22,8 @@
       "version": "version",
       "logout": "Logout",
       "continue": "Continue",
-      "skip": "Skip"
+      "skip": "Skip",
+      "load_more": "Load More"
     },
     "post": {
       "view_details": "View post details",
@@ -45,6 +46,15 @@
       "places_autocomplete": {
         "address_not_found": "Address not found"
       }
+    },
+    "profile": {
+      "preferable": "Sports I Enjoy:",
+      "undesirable": "Undesirable sports",
+      "friends": "Friends",
+      "user_posts": "User posts",
+      "add_friend": "Add friend",
+      "remove_friend": "Remove friend",
+      "awaiting_response": "Awaiting response"
     },
     "create_profile": {
       "title": "Please enter some minimal information about yourself",

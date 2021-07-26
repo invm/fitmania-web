@@ -9,7 +9,7 @@ export const toFormData = (obj: IObject) => {
   const formData = new FormData();
 
   Object.keys(obj).forEach((key) => {
-    if (key === 'postImage') {
+    if (['postImage', 'image'].includes(key)) {
       if (Array.isArray(obj[key])) {
         obj[key].forEach((img: any, i: number) => {
           formData.append(key, img, `${i}.jpeg`);

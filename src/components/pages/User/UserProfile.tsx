@@ -14,6 +14,7 @@ import { getUser, getUsersPosts, POSTS_LIMIT } from '../../../redux/actions';
 import IPost from '../../../interfaces/Post';
 import Post from '../Posts/components/Post';
 import { sports } from '../Posts/Posts';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
+  const { t } = useTranslation();
   const classes = useStyles();
   const [profile, setProfile] = useState<IUser>({} as IUser);
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -101,35 +103,38 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
       })();
   }, [match?.params.id]);
 
-  const UserButtons = (
-    <Link to="/edit-profile">
-      <Button size="small">Edit Profile</Button>
-    </Link>
-  );
-
   const VisitorButtons = (
     // Check if has pending request
     <>
-      {user.friends && !user.friends?.find((v) => v._id === profile._id) && (
+      {!user.friends?.find((v) => v._id === profile._id) ? (
         <Button
           onClick={() => {
+            // TODO:
             // addFriend(profile._id);
           }}
           size="small"
         >
-          Add Friend
+          {t('profile.add_friend')}
         </Button>
-      )}
-      {user.friends && user.friends?.find((v) => v._id === profile._id) && (
+      ) : user.friends?.find((v) => v._id === profile._id) ? (
         <Button
           onClick={() => {
             // removeFriend(profile._id);
           }}
           size="small"
         >
-          Remove Friend
+          {t('profile.remove_friend')}
         </Button>
-      )}
+      ) : user.befriendRequests && !user.befriendRequests?.find((v) => v.to === profile._id) ? (
+        <Button
+          onClick={() => {
+            // addFriend(profile._id);
+          }}
+          size="small"
+        >
+          {t('profile.awaiting_response')}
+        </Button>
+      ) : null}
     </>
   );
 
@@ -152,20 +157,11 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
                   </Typography>
                 </Grid>
               </Grid>
-              {profile.birthday && (
-                <Grid container>
-                  <Grid item container justifyContent="center">
-                    <Typography className={classes.title}>
-                      Birthday: {`${new Date(profile.birthday).getDate()}/${new Date(profile.birthday).getMonth() + 1}`}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              )}
               <Grid container>
                 {profile?.preferable && profile?.preferable?.length > 0 && (
                   <>
                     <Grid item xs={12} container justifyContent="center" style={{ marginTop: 10 }}>
-                      <Typography className={classes.title}>Sports I Enjoy:</Typography>
+                      <Typography className={classes.title}>{t('profile.preferable')}</Typography>
                     </Grid>
                     <Grid item xs={12} container justifyContent="center">
                       {profile?.preferable?.map((item, key) => {
@@ -177,7 +173,7 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
                 {profile?.undesirable && profile?.undesirable?.length > 0 && (
                   <>
                     <Grid item xs={12} container justifyContent="center" style={{ marginTop: 10 }}>
-                      <Typography className={classes.title}>Sports I Do Not Enjoy:</Typography>
+                      <Typography className={classes.title}>{t('profile.preferable')}</Typography>
                     </Grid>
                     <Grid item xs={12} container justifyContent="center">
                       {profile?.undesirable?.map((item, key) => (
@@ -189,11 +185,11 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
               </Grid>
               <Typography variant="body2" component="p"></Typography>
             </CardContent>
-            <CardActions>{user._id === profile._id ? UserButtons : VisitorButtons}</CardActions>
+            <CardActions>{VisitorButtons}</CardActions>
           </Card>
           <div style={{ paddingTop: 20 }}>
             <Typography variant="h4" style={{ textAlign: 'center' }}>
-              Friends
+              {t('profile.friends')}
             </Typography>
           </div>
           {profile?.friends?.map((friend) => (
@@ -223,7 +219,7 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
         <Grid item xs={12} md={8}>
           <div>
             <Typography variant="h6" style={{ textAlign: 'center' }}>
-              Users posts
+              {t('profile.user_posts')}
             </Typography>
           </div>
           {posts.map((post) => (
@@ -239,7 +235,7 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
                 }
               }}
             >
-              Load More
+              {t('common.load_more')}
             </Button>
           </Grid>
         </Grid>

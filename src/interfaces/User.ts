@@ -11,6 +11,7 @@ interface IUser {
   fcmToken?: string;
   groups?: any[]; // FIXME:
   friends?: IUserMin[];
+  befriendRequests?: { from: string; to: string; state: string }[];
 }
 
 export interface IUserMin {
