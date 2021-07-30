@@ -46,6 +46,22 @@ const PRIVATE: IRouteMin[] = [
     path: '/user/:id',
     component: PAGES.UserProfile,
   },
+	{
+    path: '/groups/:id',
+    component: PAGES.GroupDetails,
+  },
+  {
+    path: '/groups',
+    component: PAGES.Groups,
+  },
+  {
+    path: '/create-group',
+    component: PAGES.CreateGroup,
+  },
+  {
+    path: '/edit-group',
+    component: PAGES.UserProfile,
+  },
 ];
 
 const PUBLIC: IRouteMin[] = [

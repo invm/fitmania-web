@@ -41,20 +41,11 @@ const App = () => {
         <CssBaseline />
         <Sidebar />
         <Switch>
-          {/* <PrivateRoute exact path="/" component={Posts} />
-          <PrivateRoute exact path="/edit-profile" component={EditProfile} />
-          <PrivateRoute exact path="/groups" component={Groups} />
-          <PrivateRoute exact path="/group/create/" component={GroupCreate} />
-          <PrivateRoute
-            exact
-            path="/group/update/:id"
-            component={UpdateGroup}
-          /> */}
-          {/* <PrivateRoute exact path="/groups/:id" component={GroupDetails} />
+          {/* 
           <PrivateRoute exact path="/friends" component={Friends} />
           <PrivateRoute exact path="/search/:query" component={SearchResults} />
           <PrivateRoute exact path="/notifications" component={Notifications} />
-          <PrivateRoute exact path="/posts/:id" component={SinglePost} /> */}
+					*/}
           {getRoutes()}
           <Redirect path="*" to="/404" />
         </Switch>
