@@ -3,15 +3,16 @@ interface IUser {
   name: string;
   email: string;
   lastname: string;
-  birthday?: Date;
+  birthday?: string;
   location?: string;
   avatar?: string;
-  preferable?: string[];
-  undesirable?: string[];
+  preferable: string[];
+  undesirable: string[];
   fcmToken?: string;
   groups?: any[]; // FIXME:
   friends?: IUserMin[];
   befriendRequests?: { from: string; to: string; state: string }[];
+  [key: string]: any;
 }
 
 export interface IUserMin {

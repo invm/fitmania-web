@@ -44,18 +44,6 @@ const useStyles = makeStyles((theme) => ({
     margin: '8px',
     borderRadius: '5px',
   },
-
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    [theme.breakpoints.down('xs')]: {
-      width: '90%',
-    },
-  },
 }));
 
 const PostEventSection = ({ post, user }: PostItemProps) => {
@@ -111,12 +99,13 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
     setEventLoading(false);
   };
 
+  // TODO: move texts into translation file
   if (post.event)
     return (
       <Grid
         container
         alignItems="center"
-        style={{ padding: 8, marginTop: 8 }}
+        style={{ padding: 4, marginTop: 8 }}
         className={post.event && 'bg-gradient rounded-border '}
       >
         <Grid item xs={6} lg={4} container justifyContent="center">
@@ -159,7 +148,7 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
         </Grid>
         <Grid item xs={2} lg={1}>
           <Typography align="center">
-            <IconButton style={{ color: 'white' }} onClick={handleEventModalOpen} aria-label="settings">
+            <IconButton style={{ color: 'white', padding: 2 }} onClick={handleEventModalOpen} aria-label="settings">
               <Info />
             </IconButton>
             <Modal
@@ -175,7 +164,6 @@ const PostEventSection = ({ post, user }: PostItemProps) => {
                   left: `${42}%`,
                   transform: `translate(-${40}%, -${40}%)`,
                 }}
-                className={classes.paper}
               >
                 <CardMedia
                   className={classes.media}

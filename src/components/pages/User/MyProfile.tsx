@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Card, Typography, CardContent, CardActions, Button, Avatar } from '@material-ui/core';
-
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, RouteChildrenProps } from 'react-router-dom';
-
 import Spinner from '../../common/Spinner';
-
 import { PageContainer } from '../../common';
 import IUser from '../../../interfaces/User';
 import { RootState } from '../../../redux';
@@ -26,11 +23,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
     textAlign: 'center',
     overflow: 'visible',
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
   },
   title: {
     fontSize: 16,
@@ -88,6 +80,7 @@ const MyProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
 
   if (loading) return <Spinner />;
 
+  // TODO: add to translations
   const UserButtons = (
     <Link to="/edit-profile">
       <Button size="small">Edit Profile</Button>
@@ -100,7 +93,7 @@ const MyProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
         <Grid item xs={12} md={4}>
           <Card className={classes.card} variant="outlined">
             <CardContent>
-              <Avatar alt="profile picture" src={`${process.env.MEDIA}${profile.avatar}`} className={classes.large} />
+              <Avatar alt="" src={`${process.env.MEDIA}${profile.avatar}`} className={classes.large} />
               <Typography className={classes.title} color="textSecondary" gutterBottom variant="h6">
                 {profile.name} {profile.lastname}
               </Typography>
@@ -137,15 +130,17 @@ const MyProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
                   </>
                 )}
               </Grid>
-              <Typography variant="body2" component="p"></Typography>``
+              <Typography variant="body2" component="p"></Typography>
             </CardContent>
             <CardActions>{UserButtons}</CardActions>
           </Card>
-          <div style={{ paddingTop: 20 }}>
-            <Typography variant="h4" style={{ textAlign: 'center' }}>
-              {t('profile.friends')}
-            </Typography>
-          </div>
+          {!!profile?.friends?.length && (
+            <div style={{ paddingTop: 20 }}>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                {t('profile.friends')}
+              </Typography>
+            </div>
+          )}
           {profile?.friends?.map((friend) => (
             <Link key={friend._id} to={`/profile/${friend._id}`}>
               <Card className={classes.smallCard} variant="outlined">
@@ -171,11 +166,6 @@ const MyProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
           ))}
         </Grid>
         <Grid item xs={12} md={8}>
-          <div>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              {t('profile.user_posts')}
-            </Typography>
-          </div>
           {posts.map((post) => (
             <Post key={post._id} {...{ post, user }} />
           ))}

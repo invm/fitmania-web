@@ -29,8 +29,6 @@ const PostDetails = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
 
   useEffect(() => {
     if (!singlePostLoading && !singlePost._id) {
-      console.log(singlePostLoading, singlePost);
-
       history.push('/404');
     }
   }, [history, singlePostLoading, singlePost]);

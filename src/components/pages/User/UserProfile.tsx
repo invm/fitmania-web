@@ -146,7 +146,7 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
         <Grid item xs={12} md={4}>
           <Card className={classes.card} variant="outlined">
             <CardContent>
-              <Avatar alt="profile picture" src={`${process.env.MEDIA}${profile.avatar}`} className={classes.large} />
+              <Avatar alt="" src={`${process.env.MEDIA}${profile.avatar}`} className={classes.large} />
               <Typography className={classes.title} color="textSecondary" gutterBottom variant="h6">
                 {profile.name} {profile.lastname}
               </Typography>
@@ -217,11 +217,6 @@ const UserProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
           ))}
         </Grid>
         <Grid item xs={12} md={8}>
-          <div>
-            <Typography variant="h6" style={{ textAlign: 'center' }}>
-              {t('profile.user_posts')}
-            </Typography>
-          </div>
           {posts.map((post) => (
             <Post key={post._id} {...{ post, user }} />
           ))}

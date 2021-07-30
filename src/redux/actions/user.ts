@@ -152,20 +152,20 @@ export const createProfile =
     await dispatch(getProfile());
   };
 
-export const updateProfile = (profileData: object, history: any) => async (dispatch: Function) => {
+export const updateProfile = (profileData: object) => async (dispatch: Function) => {
   let body = toFormData(profileData);
 
-  if (profileData) {
-    let requestParams = {
-      method: Methods.PATCH,
-      endpoint: `/user`,
-      body,
-    };
-
+  let requestParams = {
+    method: Methods.PATCH,
+    endpoint: `/user`,
+    body,
+  };
+  try {
     await Request(dispatch, requestParams);
+    await dispatch(getProfile());
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
   }
-
-  await dispatch(getProfile());
 };
 
 /**

@@ -179,7 +179,7 @@ const Posts = () => {
             )}
           </Grid>
         </Grid> */}
-        <Grid container item xs={12} sm={8} md={9}>
+        <Grid container item xs={12} sm={12} md={9}>
           <Grid item xs={12} container justifyContent="center">
             <Grid item xs={12}>
               <Typography align="center" variant="h5">

@@ -38,6 +38,11 @@ const PRIVATE: IRouteMin[] = [
     exact: true,
   },
   {
+    path: '/edit-profile',
+    component: PAGES.EditProfile,
+    exact: true,
+  },
+  {
     path: '/user/:id',
     component: PAGES.UserProfile,
   },

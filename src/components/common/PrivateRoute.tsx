@@ -10,12 +10,12 @@ const PrivateRoute = ({
 }: {
   component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }) => {
-  const { isAuthenticated, verifyingSession } = useSelector((state: typeof RootState) => state.user);
+  const { isAuthenticated, verifyingSession, loading } = useSelector((state: typeof RootState) => state.user);
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (verifyingSession) {
+        if (verifyingSession || loading) {
           return (
             <div style={{ paddingTop: 50 }}>
               <Spinner size={2} />
