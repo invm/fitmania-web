@@ -12,6 +12,8 @@ import IPost from '../../../interfaces/Post';
 import Post from '../Posts/components/Post';
 import { sports } from '../Posts/Posts';
 import { useTranslation } from 'react-i18next';
+import { DATE_FORMAT } from '../../../utils/utils';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -97,13 +99,24 @@ const MyProfile = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
               <Typography className={classes.title} color="textSecondary" gutterBottom variant="h6">
                 {profile.name} {profile.lastname}
               </Typography>
-              <Grid container>
-                <Grid item xs={12} container justifyContent="center">
-                  <Typography className={classes.pos} color="textSecondary">
-                    {profile.location}
-                  </Typography>
+              {!!profile.birthday && (
+                <Grid container>
+                  <Grid item xs={12} container justifyContent="center">
+                    <Typography className={classes.pos} color="textSecondary">
+                      {moment(profile.birthday).format(DATE_FORMAT)}
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
+              {!!profile.location && (
+                <Grid container>
+                  <Grid item xs={12} container justifyContent="center">
+                    <Typography className={classes.pos} color="textSecondary">
+                      {profile.location}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              )}
               <Grid container>
                 {profile?.preferable && profile?.preferable?.length > 0 && (
                   <>

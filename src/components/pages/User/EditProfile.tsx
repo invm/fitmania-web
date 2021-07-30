@@ -83,34 +83,6 @@ const EditProfile = () => {
 
   const inputEl = useRef<HTMLInputElement>(null);
 
-  // const saveProfile = () => {
-  //   if (!state.lastname) {
-  //     showError('Can not save without a last name.');
-  //   } else if (!state.name) {
-  //     showError('Can not save without a name.');
-  //   } else if (!state.birthday) {
-  //     showError('Please provide date of birth.');
-  //   } else if (!state.location) {
-  //     showError('Please provide your city.');
-  //   } else {
-  //     setLoading(true);
-  //     updateUserProfile({
-  //       ...state,
-  //       birthday: new Date(state.birthday).getTime(),
-  //     })
-  //       .then((res) => {
-  //         setState(res.data.data);
-  //         setUserProfile(res.data.data);
-  //         setLoading(false);
-  //         showError('Profile updated');
-  //       })
-  //       .catch((err) => {
-  //         showError(err.message);
-  //         setLoading(false);
-  //       });
-  //   }
-  // };
-
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>, setFieldValue: (key: string, value: any) => void) => {
     var file = inputEl?.current && inputEl.current?.files && inputEl.current?.files?.[0];
     if (file && inputEl?.current?.files?.[0] !== null) {
@@ -125,31 +97,6 @@ const EditProfile = () => {
       };
     }
   };
-
-  // const handlePreferable = (e) => {
-  //   if (state.preferable.includes(e.target.value)) {
-  //     setState({
-  //       ...state,
-  //       preferable: state.preferable.filter((item) => item !== e.target.value),
-  //     });
-  //   } else {
-  //     setState({ ...state, preferable: [...state.preferable, e.target.value] });
-  //   }
-  // };
-
-  // const handleUndesirable = (e) => {
-  //   if (state.undesirable.includes(e.target.value)) {
-  //     setState({
-  //       ...state,
-  //       undesirable: state.undesirable.filter((item) => item !== e.target.value),
-  //     });
-  //   } else {
-  //     setState({
-  //       ...state,
-  //       undesirable: [...state.undesirable, e.target.value],
-  //     });
-  //   }
-  // };
 
   const saveProfile = async (values: {
     [key: string]: any;
@@ -181,7 +128,7 @@ const EditProfile = () => {
                 email: user.email,
                 name: user.name,
                 lastname: user.lastname,
-                image: user?.avatar ?? '',
+                image: user?.image ?? '',
                 preferable: user?.preferable ?? [],
                 undesirable: user?.undesirable ?? [],
                 birthday: user?.birthday ?? '',

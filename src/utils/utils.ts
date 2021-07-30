@@ -5,6 +5,9 @@ export const stripObject = (obj: IObject) => {
   return obj;
 };
 
+export const DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm';
+export const DATE_FORMAT = 'DD/MM/YYYY';
+
 export const toFormData = (obj: IObject) => {
   const formData = new FormData();
 
