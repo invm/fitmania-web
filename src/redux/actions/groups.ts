@@ -1,8 +1,5 @@
-import { toFormData } from './../../utils/utils';
 import { Methods, Request } from '../../utils/Wrapper';
-
 import * as types from '../types/groups';
-import { IObject } from '../../interfaces/Common';
 import { showMessage } from './message';
 import i18n from '../../i18n';
 import store, { RootState } from '..';
@@ -77,6 +74,26 @@ export const deleteGroup = async (id: string) => {
   let requestParams = {
     method: Methods.DELETE,
     endpoint: `/groups/${id}`,
+  };
+  await Request(store.dispatch, requestParams);
+};
+
+export const joinGroup = async (groupId: string) => {
+  let requestParams = {
+    method: Methods.POST,
+    endpoint: `/groups/join/${groupId}`,
+  };
+  try {
+    await Request(store.dispatch, requestParams);
+  } catch (error) {
+    showMessage(i18n.t('common.error'), error?.message, 'error');
+  }
+};
+
+export const leaveGroup = async (groupId: string) => {
+  let requestParams = {
+    method: Methods.POST,
+    endpoint: `/groups/leave/${groupId}`,
   };
   try {
     await Request(store.dispatch, requestParams);

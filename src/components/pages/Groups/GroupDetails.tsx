@@ -1,26 +1,14 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import {
-  Grid,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  CardHeader,
-  Avatar,
-  Popover,
-} from '@material-ui/core';
+import { useState, useEffect } from 'react';
+import { Grid, Typography, Button, Card, CardHeader, Avatar, Popover, CardActions } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, RouteChildrenProps } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
 import { PageContainer, Spinner } from '../../common';
-import { RootState } from '../../../redux';
-import { getGroup } from '../../../redux/actions/groups';
+import { getGroup, deleteGroup, resetGroups, joinGroup, leaveGroup } from '../../../redux/actions/groups';
 import IGroup from '../../../interfaces/Group';
+import { showMessage } from '../../../redux/actions';
+import { useTranslation } from 'react-i18next';
+import { RootState } from '../../../redux';
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -38,13 +26,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GroupDetails = ({ match }: RouteChildrenProps<{ id: string }>) => {
+const GroupDetails = ({ match, history }: RouteChildrenProps<{ id: string }>) => {
   const classes = useStyles();
   const [deleteAnchorEl, setDeleteAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState({} as IGroup);
-
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   // TODO: pull user from redux and redirect to own profile in case the user is listed
+
+  const handleJoinGroup = async (groupId: string) => {
+    setLoading(true);
+    await joinGroup(groupId);
+    await fetchAndSetGroup(groupId);
+    setLoading(false);
+  };
+
+  const handleLeaveGroup = async (groupId: string) => {
+    setLoading(true);
+    await leaveGroup(groupId);
+    await fetchAndSetGroup(groupId);
+    setLoading(false);
+  };
+  const { user } = useSelector((state: typeof RootState) => state.user);
 
   const fetchAndSetGroup = async (id: string) => {
     setLoading(true);
@@ -66,8 +70,14 @@ const GroupDetails = ({ match }: RouteChildrenProps<{ id: string }>) => {
   //   athletes: group?.users?.length,
   // };
 
-  const handleGroupDelete = () => {
-    // dispatch(deleteGroup(group._id, props.history));
+  const handleGroupDelete = async () => {
+    try {
+      await deleteGroup(group._id);
+      await dispatch(resetGroups());
+      history.push('/groups');
+    } catch (error) {
+      showMessage(t('common.error'), error?.message, 'error');
+    }
   };
 
   const handleDeleteClick = (currentTarget: EventTarget & HTMLButtonElement) => {
@@ -93,10 +103,63 @@ const GroupDetails = ({ match }: RouteChildrenProps<{ id: string }>) => {
             <Grid item xs={12}></Grid>
             <Grid container spacing={1} item xs={12} direction="column">
               <Grid item container>
-                <Grid item xs={12} sm={3}>
-                  <Button onClick={({ currentTarget }) => handleDeleteClick(currentTarget)} size="large">
-                    Delete Group
-                  </Button>
+                <Grid item xs={12}>
+                  <Card>
+                    <CardHeader title={group.title} />
+                    <CardActions>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          width: '100%',
+                        }}
+                      >
+                        {loading ? (
+                          <Spinner />
+                        ) : (
+                          <>
+                            <div>
+                              {group?.admin?._id === user?._id && (
+                                <Button
+                                  variant="outlined"
+                                  onClick={({ currentTarget }) => handleDeleteClick(currentTarget)}
+                                  size="large"
+                                  color="primary"
+                                >
+                                  Delete Group
+                                </Button>
+                              )}
+                            </div>
+
+                            {group?.admin?._id !== user?._id && (
+                              <>
+                                {group?.users?.map(({ _id }) => _id).includes(user?._id) ? (
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() => handleLeaveGroup(group._id)}
+                                    size="medium"
+                                    color="primary"
+                                  >
+                                    Leave group
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() => handleJoinGroup(group._id)}
+                                    size="medium"
+                                    color="primary"
+                                  >
+                                    Join group
+                                  </Button>
+                                )}
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </CardActions>
+                  </Card>
                   <Popover
                     id={id}
                     open={deleteOpen}

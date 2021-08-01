@@ -1,9 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { Grid, Button, Paper, TextField, InputLabel, Select, MenuItem, FormControl } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-
 import { makeStyles } from '@material-ui/core/styles';
-
 import { PageContainer, Spinner } from '../../common';
 import { sports } from '../Posts/Posts';
 import { createGroup } from '../../../redux/actions/groups';
@@ -40,14 +37,13 @@ const GroupCreate = ({ history }: RouteChildrenProps) => {
     sport: '',
   });
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const handleGroupCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state.title.length > 0 && state.sport.length > 0) {
       setLoading(true);
-      await dispatch(createGroup(state));
+      await createGroup(state);
       setLoading(false);
       history.push('/groups');
     } else {

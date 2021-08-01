@@ -1,78 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Grid,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-} from '@material-ui/core';
+import { useState, useEffect } from 'react';
+import { Grid, FormControlLabel, Checkbox, Typography, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { makeStyles } from '@material-ui/core/styles';
-
-import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
-// import { getGroups, joinGroup, leaveGroup } from '../../actions/groups';
 import { PageContainer } from '../../common';
 import { RootState } from '../../../redux';
 import { sports } from '../Posts/Posts';
-import { getGroups } from '../../../redux/actions/groups';
-
-const useStyles = makeStyles({
-  root: {
-    // maxWidth: 345,
-  },
-  media: {
-    height: 140,
-  },
-});
+import { getGroups, resetGroups } from '../../../redux/actions/groups';
+import GroupListItem from './components/GroupListItem';
 
 const Groups = () => {
-  const classes = useStyles();
-
-  const [state, setState] = useState({
-    selectedSports: [] as string[],
-    page: 0,
-  });
+  const [selectedSports, setSelectedSports] = useState<string[]>([]);
   const dispatch = useDispatch();
   const {
-    groups: { groups },
+    user: { user },
+    groups: { groups, groupsExhausted, groupsLoading },
   } = useSelector((state: typeof RootState) => state);
 
   const handleSelectSport = (e: any) => {
-    if (state.selectedSports.includes(e.target.value)) {
-      setState({
-        ...state,
-        selectedSports: state.selectedSports.filter((item) => item !== e.target.value),
-      });
+    if (selectedSports.includes(e.target.value)) {
+      setSelectedSports([...selectedSports.filter((item) => item !== e.target.value)]);
     } else {
-      setState({
-        ...state,
-        selectedSports: [...state.selectedSports, e.target.value],
-      });
+      setSelectedSports([...selectedSports, e.target.value]);
     }
   };
 
   useEffect(() => {
-    dispatch(getGroups(state.selectedSports));
-  }, [state.selectedSports]);
+    (async () => {
+      if (!groupsExhausted && !groupsLoading)
+        if (selectedSports.length) {
+          await dispatch(resetGroups());
+          await dispatch(getGroups(selectedSports));
+        } else {
+          await dispatch(resetGroups());
+          await dispatch(getGroups([]));
+        }
+    })();
+    // eslint-disable-next-line
+  }, [selectedSports, dispatch]);
 
   const handleLoadMore = () => {
-    setState({ ...state, page: state.page + 1 });
+    if (!groupsExhausted && !groupsLoading) dispatch(getGroups(selectedSports));
   };
-
-  // const handleJoinGroup = (groupId) => {
-  //   dispatch(joinGroup(groupId, user._id));
-  // };
-
-  // const handleLeaveGroup = (groupId) => {
-  //   dispatch(leaveGroup(groupId, user._id));
-  // };
 
   return (
     <PageContainer>
@@ -95,7 +63,7 @@ const Groups = () => {
                 <Checkbox
                   color={'primary'}
                   value={item[0]}
-                  checked={state.selectedSports.includes(item[0])}
+                  checked={selectedSports.includes(item[0])}
                   onChange={handleSelectSport}
                   icon={item[1]}
                 />
@@ -105,93 +73,15 @@ const Groups = () => {
           ))}
           <Grid item xs={12}>
             <Typography align="center" variant="h5">
-              Showing results for {state.selectedSports.length > 0 ? state.selectedSports.join(', ') : 'all sports'}
+              Showing results for {selectedSports.length > 0 ? selectedSports.join(', ') : 'all sports'}
             </Typography>
           </Grid>
         </Grid>
         {groups.map((group, key) => {
-          return (
-            <Grid key={key} item xs={12} md={6} container justifyContent="center">
-              <Card style={{ width: '100%' }} className={classes.root}>
-                <CardMedia
-                  className={classes.media}
-                  image={`https://source.unsplash.com/random/?${group.sport}`}
-                  title={group.title}
-                />
-                <CardContent>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {group.title}
-                    </Typography>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Typography variant="h6" component="span">
-                        {group.users?.length}
-                      </Typography>
-                      <PersonOutlinedIcon />
-                    </div>
-                  </div>
-                  {group.description && (
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      {group.description}
-                    </Typography>
-                  )}
-                </CardContent>
-                <CardActions>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      width: '100%',
-                    }}
-                  >
-                    {/* {group.users.map(({ _id }) => _id).includes(user._id) ? (
-                      <>
-                        {leavingGroup._id === group._id && leavingGroup.loading === true ? (
-                          <Spinner />
-                        ) : (
-                          <Button onClick={() => handleLeaveGroup(group._id)} size="small" color="primary">
-                            Leave group
-                          </Button>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {joiningGroup._id === group._id && joiningGroup.loading === true ? (
-                          <Spinner />
-                        ) : (
-                          <Button onClick={() => handleJoinGroup(group._id)} size="small" color="primary">
-                            Join group
-                          </Button>
-                        )}
-                      </>
-                    )} */}
-
-                    <Link to={`/groups/${group._id}`}>
-                      <Button size="small" color="primary">
-                        Learn More
-                      </Button>
-                    </Link>
-                  </div>
-                </CardActions>
-              </Card>
-            </Grid>
-          );
+          return <GroupListItem key={key} {...{ group, user }} />;
         })}
         <Grid item xs={12} container justifyContent="center">
-          <Button variant="contained" onClick={handleLoadMore}>
+          <Button disabled={groupsExhausted} variant="contained" onClick={handleLoadMore}>
             Load More
           </Button>
         </Grid>
