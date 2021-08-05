@@ -200,7 +200,7 @@ const GroupDetails = ({ match, history }: RouteChildrenProps<{ id: string }>) =>
                         avatar={
                           <Link to={`/user/${user._id}`}>
                             <Avatar
-                              src={`${process.env.MEDIA}${user?.avatar}`}
+                              src={`${process.env.REACT_APP_MEDIA}${user?.avatar}`}
                               aria-label="user initials"
                               className={classes.avatar}
                             >

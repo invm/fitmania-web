@@ -55,6 +55,10 @@ const PRIVATE: IRouteMin[] = [
     component: PAGES.Groups,
   },
   {
+    path: '/friends',
+    component: PAGES.Friends,
+  },
+  {
     path: '/create-group',
     component: PAGES.CreateGroup,
   },
