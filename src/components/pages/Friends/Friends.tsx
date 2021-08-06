@@ -1,55 +1,20 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-
-import {
-	Grid,
-	Card,
-	Typography,
-	IconButton,
-	TextField,
-	CardHeader,
-	CardContent,
-	CardActions,
-	Paper,
-	ButtonBase,
-	Avatar,
-	Button,
-} from '@material-ui/core';
-import { Link, RouteChildrenProps } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Grid } from '@material-ui/core';
 import { PageContainer } from '../../common/Layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
 import {
+	getFriendRequests,
 	getFriends,
 	getFriendsSuggestions,
 	resetFriends,
 } from '../../../redux/actions/friends';
-import Friend from './components/Friend';
+import FriendRequests from './components/FriendRequests';
+import { Spinner } from '../../common';
+import FriendsSuggestions from './components/FriendsSuggetions';
+import FriendsList from './components/FriendsList';
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		flexGrow: 1,
-	},
-	paper: {
-		padding: theme.spacing(1),
-		marginTop: theme.spacing(3),
-		width: '100%',
-	},
-	img: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
-	},
-	cardHeader: {
-		padding: '0 8px 0',
-	},
-	avatar: {
-		backgroundColor: theme.palette.primary.main,
-	},
-}));
-
-const Friends = ({}: RouteChildrenProps) => {
-	const classes = useStyles();
+const Friends = () => {
 	const dispatch = useDispatch();
 	const {
 		friends,
@@ -57,15 +22,10 @@ const Friends = ({}: RouteChildrenProps) => {
 		friendsLoading,
 		friendsSuggestions,
 		friendsSuggestionsLoading,
+		requests,
+		requestsExhausted,
+		requestsLoading,
 	} = useSelector((state: typeof RootState) => state.friends);
-
-	// const handleRemoveFriend = (id) => {
-	// 	removeFriend(id);
-	// };
-
-	// useEffect(() => {
-	// 	getFriendsSuggestions();
-	// }, []);
 
 	useEffect(() => {
 		(async () => {
@@ -74,6 +34,9 @@ const Friends = ({}: RouteChildrenProps) => {
 				await dispatch(getFriends());
 			}
 			if (!friendsSuggestions.length) await dispatch(getFriendsSuggestions());
+			if (!requestsExhausted && !requestsLoading) {
+				await dispatch(getFriendRequests());
+			}
 		})();
 		// eslint-disable-next-line
 	}, []);
@@ -82,20 +45,31 @@ const Friends = ({}: RouteChildrenProps) => {
 		<PageContainer>
 			<Grid container>
 				<Grid container item xs={12}>
-					<Grid item xs={12}>
-						<h3>Friends suggestions</h3>
-					</Grid>
-					<Grid container item xs={12} style={{ paddingTop: '10px' }}>
-						{!friendsSuggestionsLoading && friendsSuggestions?.length > 0 && (
-							<>
-								{friendsSuggestions.map((user) => (
-									<Grid item xs={12} lg={6} key={user._id}>
-										<Friend {...{ user }} />
-									</Grid>
-								))}
-							</>
-						)}
-					</Grid>
+					{requestsLoading ? (
+						<Grid container justifyContent="center" item xs={12}>
+							<Spinner />
+						</Grid>
+					) : (
+						<FriendRequests {...{ requests }} />
+					)}
+				</Grid>
+				<Grid container item xs={12}>
+					{friendsSuggestionsLoading ? (
+						<Grid container justifyContent="center" item xs={12}>
+							<Spinner />
+						</Grid>
+					) : (
+						<FriendsSuggestions users={friendsSuggestions} />
+					)}
+				</Grid>
+				<Grid container item xs={12}>
+					{friendsLoading ? (
+						<Grid container justifyContent="center" item xs={12}>
+							<Spinner />
+						</Grid>
+					) : (
+						<FriendsList {...{ friends }} />
+					)}
 				</Grid>
 				<Grid container item xs={12} sm={8} md={9}>
 					{/* {auth?.user?.friends.length === 0 && (

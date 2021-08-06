@@ -1,14 +1,19 @@
-import IUser, { IUserMin } from '../../interfaces/User';
+import IBefriendRequest from '../../interfaces/BefriendRequest';
+import IUser from '../../interfaces/User';
 import * as types from '../types/friends';
 import Action from './Action';
 
 export interface friendsInitialState {
-	friends: IUserMin[];
+	friends: IUser[];
 	friendsExhausted: boolean;
 	friendsLoading: boolean;
 	offset: number;
 	friendsSuggestions: IUser[];
 	friendsSuggestionsLoading: boolean;
+	requests: IBefriendRequest[];
+	requestsOffset: number;
+	requestsExhausted: boolean;
+	requestsLoading: boolean;
 }
 
 export const initialState: friendsInitialState = {
@@ -18,10 +23,34 @@ export const initialState: friendsInitialState = {
 	offset: 0,
 	friendsSuggestions: [],
 	friendsSuggestionsLoading: false,
+	requests: [],
+	requestsLoading: false,
+	requestsOffset: 0,
+	requestsExhausted: false,
 };
 
 export default function state(state = initialState, action: Action) {
 	switch (action.type) {
+		case types.ADD_FRIEND_SUCCESS:
+			return {
+				...state,
+				friendsSuggestions: [
+					...state.friendsSuggestions.filter((v) => v._id !== action.payload),
+				],
+			};
+		case types.REMOVE_FRIEND_SUCCESS:
+			return {
+				...state,
+				friends: [...state.friends.filter((v) => v._id !== action.payload)],
+			};
+		case types.DECLINE_FRIEND_REQUEST_SUCCESS:
+		case types.ACCEPT_FRIEND_REQUEST_SUCCESS:
+			return {
+				...state,
+				requests: [
+					...state.requests.filter((v) => v.from._id !== action.payload),
+				],
+			};
 		case types.GET_FRIENDS_SUGGESTIONS_ATTEMPT:
 			return {
 				...state,
@@ -39,7 +68,13 @@ export default function state(state = initialState, action: Action) {
 				friendsSuggestions: action.payload,
 			};
 		case types.RESET_FRIENDS:
-			return initialState;
+			return {
+				...state,
+				friends: [],
+				friendsLoading: false,
+				friendsExhausted: false,
+				offset: 0,
+			};
 		case types.GET_FRIENDS_ATTEMPT:
 			return {
 				...state,
@@ -59,6 +94,26 @@ export default function state(state = initialState, action: Action) {
 			return {
 				...state,
 				friendsLoading: false,
+			};
+		case types.GET_FRIENDS_REQUESTS_ATTEMPT:
+			return {
+				...state,
+				requestsLoading: true,
+			};
+		case types.GET_FRIENDS_REQUESTS_SUCCESS:
+			return {
+				...state,
+				requestsLoading: false,
+				requests: [...state.requests, ...action.payload.data],
+				requestsExhausted: action.payload.requestsExhausted,
+				requestsOffset: !action.payload.requestsExhausted
+					? state.requestsOffset + 1
+					: state.requestsOffset,
+			};
+		case types.GET_FRIENDS_REQUESTS_FAIL:
+			return {
+				...state,
+				requestsLoading: false,
 			};
 		default:
 			return state;

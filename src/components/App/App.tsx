@@ -1,68 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
 import { Alert, Sidebar } from '../common';
 import { ThemeProvider } from '@material-ui/styles';
 import { CssBaseline, Snackbar, Slide } from '@material-ui/core';
-
-// import {
-//   Posts,
-//   Groups,
-//   Profile,
-//   Friends,
-//   NotFoundPage,
-//   Notifications,
-//   EditProfile,
-//   SinglePost,
-//   GroupDetails,
-//   GroupCreate,
-//   UpdateGroup,
-//   SearchResults
-// } from './pages';
-
-import { RootState } from '../../redux';
-import { darkTheme, lightTheme } from './App.helpers';
+import { lightTheme } from './App.helpers';
 import { verifySession } from '../../redux/actions';
 import { getRoutes } from './routes';
 
 const App = () => {
-  const { theme } = useSelector((state: typeof RootState) => state.user);
-  const [creditOpen, setCreditOpen] = useState(true);
-  const dispatch = useDispatch();
+	const [creditOpen, setCreditOpen] = useState(true);
+	const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(verifySession());
-  }, [dispatch]);
+	useEffect(() => {
+		dispatch(verifySession());
+	}, [dispatch]);
 
-  return (
-    <Router>
-      <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-        <CssBaseline />
-        <Sidebar />
-        <Switch>
-          {/* 
-          <PrivateRoute exact path="/friends" component={Friends} />
+	return (
+		<Router>
+			<ThemeProvider theme={lightTheme}>
+				<CssBaseline />
+				<Sidebar />
+				<Switch>
+					{/* 
           <PrivateRoute exact path="/search/:query" component={SearchResults} />
           <PrivateRoute exact path="/notifications" component={Notifications} />
 					*/}
-          {getRoutes()}
-          <Redirect path="*" to="/404" />
-        </Switch>
-        <Alert />
-        <Snackbar
-          autoHideDuration={null}
-          TransitionComponent={Slide}
-          open={creditOpen}
-          onClose={() => {
-            setCreditOpen(false);
-          }}
-          message={'Images courtesy of Unsplash.com'}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        />
-      </ThemeProvider>
-    </Router>
-  );
+					{getRoutes()}
+					<Redirect path="*" to="/404" />
+				</Switch>
+				<Alert />
+				<Snackbar
+					autoHideDuration={null}
+					TransitionComponent={Slide}
+					open={creditOpen}
+					onClose={() => {
+						setCreditOpen(false);
+					}}
+					message={'Images courtesy of Unsplash.com'}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+				/>
+			</ThemeProvider>
+		</Router>
+	);
 };
 
 export default App;

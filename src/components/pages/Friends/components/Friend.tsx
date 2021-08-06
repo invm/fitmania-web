@@ -1,37 +1,54 @@
+import React, { useState } from 'react';
 import {
 	Avatar,
+	Button,
 	Card,
 	CardContent,
 	CardHeader,
 	makeStyles,
 } from '@material-ui/core';
-import React from 'react';
 import { Link } from 'react-router-dom';
-import IUser, { IUserMin } from '../../../../interfaces/User';
+import IUser from '../../../../interfaces/User';
+import { addFriend, removeFriend } from '../../../../redux/actions/friends';
+import { useDispatch } from 'react-redux';
+import { Spinner } from '../../../common';
 
 const useStyles = makeStyles((theme) => ({
-	paper: {
-		padding: theme.spacing(1),
-		marginTop: theme.spacing(3),
-		width: '100%',
-	},
 	cardHeader: {
-		padding: '0 8px 0',
+		padding: '0',
 	},
 	avatar: {
 		backgroundColor: theme.palette.primary.main,
-		width: 60,
-		height: 60,
+		width: 50,
+		height: 50,
 	},
 }));
 
-const Friend = ({ user }: { user: IUser }) => {
+const Friend = ({
+	user,
+	suggestion = false,
+}: {
+	user: IUser;
+	suggestion?: boolean;
+}) => {
 	const classes = useStyles();
+	const [loading, setLoading] = useState(false);
+	const dispatch = useDispatch();
 
-	console.log(user);
+	const handleAddFriend = async () => {
+		setLoading(true);
+		await dispatch(addFriend(user._id));
+		setLoading(false);
+	};
+
+	const handleRemoveFriend = async () => {
+		setLoading(true);
+		await dispatch(removeFriend(user._id));
+		setLoading(false);
+	};
 
 	return (
-		<Card className={classes.paper} variant="outlined">
+		<Card variant="outlined">
 			<CardContent>
 				<CardHeader
 					className={classes.cardHeader}
@@ -47,14 +64,28 @@ const Friend = ({ user }: { user: IUser }) => {
 					}
 					title={
 						<Link to={`/user/${user._id}`}>
-							<b>
+							<b style={{ fontSize: 16 }}>
 								{user?.name} {user?.lastname}
 							</b>
-							<b>{user?.location && <p>{user?.location}</p>}</b>
 						</Link>
 					}
+					action={
+						<div style={{ display: 'flex', padding: '8px 8px 0 0' }}>
+							{loading ? (
+								<Spinner size={0.3} />
+							) : suggestion ? (
+								<Button variant="outlined" onClick={handleAddFriend}>
+									Add friend
+								</Button>
+							) : (
+								<Button variant="outlined" onClick={handleRemoveFriend}>
+									Remove friend
+								</Button>
+							)}
+						</div>
+					}
+					subheader={<b style={{ fontSize: 14 }}>{user?.location}</b>}
 				/>
-
 				{user?.preferable?.length > 0 && (
 					<div>Likes: {user?.preferable.join(', ')}</div>
 				)}
