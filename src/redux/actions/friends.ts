@@ -158,7 +158,7 @@ export const declineFriendRequest =
 
 		let requestParams = {
 			method: Methods.POST,
-			endpoint: `/friends/accept/${userId}`,
+			endpoint: `/friends/reject/${userId}`,
 		};
 
 		try {
