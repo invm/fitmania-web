@@ -10,7 +10,7 @@ interface IUser {
   undesirable: string[];
   fcmToken?: string;
   groups?: any[]; // FIXME:
-  friends?: IUserMin[];
+  friends?: IUser[];
   befriendRequests?: { from: string; to: string; state: string }[];
   [key: string]: any;
 }
