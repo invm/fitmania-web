@@ -10,6 +10,8 @@ export interface groupsInitialState {
   singleGroup: IGroup;
   singleGroupId: string;
   singleGroupLoading: boolean;
+	featuredGroupsLoading: boolean,
+  featuredGroups: IGroup[],
 }
 
 export const initialState: groupsInitialState = {
@@ -20,10 +22,28 @@ export const initialState: groupsInitialState = {
   singleGroup: {} as IGroup,
   singleGroupId: '',
   singleGroupLoading: true,
+	featuredGroupsLoading: false,
+  featuredGroups: [],
 };
 
 export default function state(state = initialState, action: Action) {
   switch (action.type) {
+		case types.GET_FEATURED_GROUPS_SUCCESS:
+      return {
+        ...state,
+        featuredGroupsLoading: false,
+        featuredGroups: action.payload,
+      };
+    case types.GET_FEATURED_GROUPS_FAIL:
+      return {
+        ...state,
+        featuredGroupsLoading: false,
+      };
+    case types.GET_FEATURED_GROUPS_ATTEMPT:
+      return {
+        ...state,
+        featuredGroupsLoading: true,
+      };
     case types.RESET_GROUPS:
       return initialState;
     case types.RESET_SINGLE_GROUP:

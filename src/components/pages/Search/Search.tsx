@@ -62,7 +62,7 @@ const SearchResults = ({
 
 	return (
 		<PageContainer>
-			<Grid container justify="center">
+			<Grid container justifyContent="center">
 				<Grid item xs={12}>
 					{usersLoading && (
 						<div style={{ paddingTop: 50, textAlign: 'center' }}>
@@ -129,7 +129,7 @@ const SearchResults = ({
 					{!groupsLoading &&
 						groups.map((group, key) => {
 							return (
-								<Grid key={key} item xs={12} md={6} container justify="center">
+								<Grid key={key} item xs={12} md={6} container justifyContent="center">
 									<Card style={{ width: '100%' }} className={classes.root}>
 										<CardContent>
 											<div

@@ -72,6 +72,10 @@ const PRIVATE: IRouteMin[] = [
 		path: '/search/:query',
 		component: PAGES.Search,
 	},
+	{
+		path: '/notifications',
+		component: PAGES.Notifications,
+	},
 ];
 
 const PUBLIC: IRouteMin[] = [

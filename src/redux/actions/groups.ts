@@ -7,97 +7,129 @@ import store, { RootState } from '..';
 export const GROUPS_LIMIT = 10;
 
 export const resetGroups = () => (dispatch: Function) => {
-  dispatch({ type: types.RESET_GROUPS });
+	dispatch({ type: types.RESET_GROUPS });
 };
 
 export const resetSingleGroup = () => (dispatch: Function) => {
-  dispatch({ type: types.RESET_SINGLE_GROUP });
+	dispatch({ type: types.RESET_SINGLE_GROUP });
 };
 
 export const getGroups =
-  (sports: string[] = []) =>
-  async (dispatch: Function, getState: () => typeof RootState) => {
-    dispatch({ type: types.GET_GROUPS_ATTEMPT });
+	(sports: string[] = []) =>
+	async (dispatch: Function, getState: () => typeof RootState) => {
+		dispatch({ type: types.GET_GROUPS_ATTEMPT });
 
-    const { offset } = getState().groups;
+		const { offset } = getState().groups;
 
-    let requestParams = {
-      method: Methods.GET,
-      endpoint: `/groups?offset=${offset}&limit=${GROUPS_LIMIT}${sports.map((v) => '&sports[]=' + v).join('')}`,
-    };
+		let requestParams = {
+			method: Methods.GET,
+			endpoint: `/groups?offset=${offset}&limit=${GROUPS_LIMIT}${sports
+				.map((v) => '&sports[]=' + v)
+				.join('')}`,
+		};
 
-    try {
-      let res = await Request(dispatch, requestParams);
-      if (sports.length) await dispatch(resetGroups());
-      dispatch({
-        type: types.GET_GROUPS_SUCCESS,
-        payload: {
-          data: res.data.data,
-          groupsExhausted: res.data.data.length < GROUPS_LIMIT,
-        },
-      });
-    } catch (error) {
-      dispatch({
-        type: types.GET_GROUPS_FAIL,
-      });
-    }
-  };
+		try {
+			let res = await Request(dispatch, requestParams);
+			if (sports.length) await dispatch(resetGroups());
+			dispatch({
+				type: types.GET_GROUPS_SUCCESS,
+				payload: {
+					data: res.data.data,
+					groupsExhausted: res.data.data.length < GROUPS_LIMIT,
+				},
+			});
+		} catch (error) {
+			dispatch({
+				type: types.GET_GROUPS_FAIL,
+			});
+		}
+	};
 
 export const getGroup = async (_id: string) => {
-  let requestParams = {
-    method: Methods.GET,
-    endpoint: `/groups/${_id}`,
-  };
-  try {
-    let { response } = await Request(store.dispatch, requestParams);
+	let requestParams = {
+		method: Methods.GET,
+		endpoint: `/groups/${_id}`,
+	};
+	try {
+		let { response } = await Request(store.dispatch, requestParams);
 
-    return response.data.data;
-  } catch (error) {
-    showMessage(i18n.t('common.error'), error?.message, 'error');
-  }
+		return response.data.data;
+	} catch (error) {
+		showMessage(i18n.t('common.error'), error?.message, 'error');
+	}
 };
 
-export const createGroup = async ({ title, sport }: { title: string; sport: string }) => {
-  let requestParams = {
-    method: Methods.POST,
-    endpoint: `/groups`,
-    body: { title, sport },
-  };
-  try {
-    await Request(store.dispatch, requestParams);
-  } catch (error) {
-    showMessage(i18n.t('common.error'), error?.message, 'error');
-  }
+export const createGroup = async ({
+	title,
+	sport,
+}: {
+	title: string;
+	sport: string;
+}) => {
+	let requestParams = {
+		method: Methods.POST,
+		endpoint: `/groups`,
+		body: { title, sport },
+	};
+	try {
+		await Request(store.dispatch, requestParams);
+	} catch (error) {
+		showMessage(i18n.t('common.error'), error?.message, 'error');
+	}
 };
 
 export const deleteGroup = async (id: string) => {
-  let requestParams = {
-    method: Methods.DELETE,
-    endpoint: `/groups/${id}`,
-  };
-  await Request(store.dispatch, requestParams);
+	let requestParams = {
+		method: Methods.DELETE,
+		endpoint: `/groups/${id}`,
+	};
+	await Request(store.dispatch, requestParams);
 };
 
 export const joinGroup = async (groupId: string) => {
-  let requestParams = {
-    method: Methods.POST,
-    endpoint: `/groups/join/${groupId}`,
-  };
-  try {
-    await Request(store.dispatch, requestParams);
-  } catch (error) {
-    showMessage(i18n.t('common.error'), error?.message, 'error');
-  }
+	let requestParams = {
+		method: Methods.POST,
+		endpoint: `/groups/join/${groupId}`,
+	};
+	try {
+		await Request(store.dispatch, requestParams);
+	} catch (error) {
+		showMessage(i18n.t('common.error'), error?.message, 'error');
+	}
 };
 
 export const leaveGroup = async (groupId: string) => {
-  let requestParams = {
-    method: Methods.POST,
-    endpoint: `/groups/leave/${groupId}`,
-  };
-  try {
-    await Request(store.dispatch, requestParams);
-  } catch (error) {
-    showMessage(i18n.t('common.error'), error?.message, 'error');
-  }
+	let requestParams = {
+		method: Methods.POST,
+		endpoint: `/groups/leave/${groupId}`,
+	};
+	try {
+		await Request(store.dispatch, requestParams);
+	} catch (error) {
+		showMessage(i18n.t('common.error'), error?.message, 'error');
+	}
+};
+
+export const getFeaturedGroups = () => async (dispatch: Function) => {
+	dispatch({
+		type: types.GET_FEATURED_GROUPS_ATTEMPT,
+	});
+	let requestParams = {
+		method: Methods.GET,
+		endpoint: `/groups/featured`,
+	};
+	try {
+		let res = await Request(store.dispatch, requestParams);
+
+		dispatch({
+			type: types.GET_FEATURED_GROUPS_SUCCESS,
+			payload: res.data.data,
+		});
+	} catch (error) {
+		showMessage(i18n.t('common.error'), error?.message, 'error');
+
+		dispatch({
+			type: types.GET_FEATURED_GROUPS_FAIL,
+		});
+	}
 };
