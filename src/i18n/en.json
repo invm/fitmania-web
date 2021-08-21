@@ -56,7 +56,8 @@
 			"user_posts": "User posts",
 			"add_friend": "Add friend",
 			"remove_friend": "Remove friend",
-			"awaiting_response": "Awaiting response"
+			"awaiting_response": "Awaiting response",
+			"respond_to_request":"Respond to request"
 		},
 		"create_profile": {
 			"title": "Please enter some minimal information about yourself",

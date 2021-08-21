@@ -27,7 +27,7 @@ import {
 } from '@material-ui/icons';
 import { RootState } from '../../../redux';
 import { Spinner } from '../../common';
-import { getPosts } from '../../../redux/actions';
+import { getPosts, resetPosts } from '../../../redux/actions';
 import { IObject } from '../../../interfaces/Common';
 import { getFeaturedGroups } from '../../../redux/actions/groups';
 import GroupListItem from '../Groups/components/GroupListItem';
@@ -84,8 +84,19 @@ const Posts = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		!postsExhausted && dispatch(getPosts(sportsFilter));
-	}, [dispatch, sportsFilter, postsExhausted]);
+		if (sportsFilter.length && !postsLoading) {
+			dispatch(resetPosts());
+			dispatch(getPosts(sportsFilter));
+		} else if (!postsLoading) {
+			dispatch(resetPosts());
+			dispatch(getPosts());
+		}
+		// eslint-disable-next-line
+	}, [dispatch, sportsFilter]);
+
+	// useEffect(() => {
+	// 	!postsExhausted && dispatch(getPosts(sportsFilter));
+	// }, [dispatch, sportsFilter, postsExhausted]);
 
 	const expandList = () => {
 		!postsExhausted && dispatch(getPosts());

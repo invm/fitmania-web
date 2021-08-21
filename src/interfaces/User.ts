@@ -5,12 +5,13 @@ interface IUser {
   lastname: string;
   birthday?: string;
   location?: string;
-  avatar?: string;
+  image?: string;
   preferable: string[];
   undesirable: string[];
   fcmToken?: string;
   groups?: any[]; // FIXME:
   friends?: IUser[];
+	myRequests?: string[],
   befriendRequests?: { from: string; to: string; state: string }[];
   [key: string]: any;
 }
@@ -20,6 +21,7 @@ export interface IUserMin {
   name: string;
   avatar: string;
   lastname: string;
+  image?: string;
 }
 
 export default IUser;

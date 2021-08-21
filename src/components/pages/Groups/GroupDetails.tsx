@@ -200,7 +200,7 @@ const GroupDetails = ({ match, history }: RouteChildrenProps<{ id: string }>) =>
                         avatar={
                           <Link to={`/user/${user._id}`}>
                             <Avatar
-                              src={`${process.env.REACT_APP_MEDIA}${user?.avatar}`}
+                              src={`${process.env.REACT_APP_MEDIA}${user?.image}`}
                               aria-label="user initials"
                               className={classes.avatar}
                             >
@@ -221,7 +221,7 @@ const GroupDetails = ({ match, history }: RouteChildrenProps<{ id: string }>) =>
               </Grid>
 
               {/* TODO: move to i18n */}
-              <h4>Group posts</h4>
+              {/* <h4>Group posts</h4> */}
               {/* <Grid container spacing={1}>
                 <Grid item xs={12}>
                   {groupPostsLoading && <Spinner />}

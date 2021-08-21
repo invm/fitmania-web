@@ -31,7 +31,6 @@ export const getPosts =
 
     try {
       let res = await Request(dispatch, requestParams);
-      if (sports.length) await dispatch(resetPosts());
       dispatch({
         type: types.GET_POSTS_SUCCESS,
         payload: {

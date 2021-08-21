@@ -22,7 +22,7 @@ const Groups = () => {
 		groups: { groups, groupsExhausted, groupsLoading },
 	} = useSelector((state: typeof RootState) => state);
 
-	const handleSelectSport = (e: any) => {
+	const handleSelectSport = async (e: any) => {
 		if (selectedSports.includes(e.target.value)) {
 			setSelectedSports([
 				...selectedSports.filter((item) => item !== e.target.value),
@@ -34,7 +34,7 @@ const Groups = () => {
 
 	useEffect(() => {
 		(async () => {
-			if (!groupsExhausted && !groupsLoading)
+			if (!groupsLoading)
 				if (selectedSports.length) {
 					await dispatch(resetGroups());
 					await dispatch(getGroups(selectedSports));
@@ -90,8 +90,8 @@ const Groups = () => {
 				</Grid>
 				{groups.map((group, key) => {
 					return (
-						<Grid container item xs={12} md={6}>
-							<GroupListItem key={key} {...{ group, user }} />;
+						<Grid key={key} container item xs={12} md={6}>
+							<GroupListItem {...{ group, user }} />
 						</Grid>
 					);
 				})}
