@@ -1,3 +1,5 @@
+import IGroup from "./Group";
+
 interface IUser {
   _id: string;
   name: string;
@@ -9,7 +11,7 @@ interface IUser {
   preferable: string[];
   undesirable: string[];
   fcmToken?: string;
-  groups?: any[]; // FIXME:
+  groups?: IGroup[]; // FIXME:
   friends?: IUser[];
 	myRequests?: string[],
   befriendRequests?: { from: string; to: string; state: string }[];

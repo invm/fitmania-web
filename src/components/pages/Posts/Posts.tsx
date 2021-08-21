@@ -27,7 +27,7 @@ import {
 } from '@material-ui/icons';
 import { RootState } from '../../../redux';
 import { Spinner } from '../../common';
-import { getPosts, resetPosts } from '../../../redux/actions';
+import { getPosts, getStatistics, resetPosts } from '../../../redux/actions';
 import { IObject } from '../../../interfaces/Common';
 import { getFeaturedGroups } from '../../../redux/actions/groups';
 import GroupListItem from '../Groups/components/GroupListItem';
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 const Posts = () => {
 	const dispatch = useDispatch();
 	const {
-		posts: { posts, postsLoading, postsExhausted },
+		posts: { posts, postsLoading, postsExhausted, stats },
 		groups: { featuredGroupsLoading, featuredGroups },
 		user: { user },
 	} = useSelector((state: typeof RootState) => state);
@@ -79,7 +79,7 @@ const Posts = () => {
 	const [sportsFilter, setSportsFilter] = useState<string[]>([]);
 
 	useEffect(() => {
-		// if (!stats) getStatistics();
+		dispatch(getStatistics());
 		dispatch(getFeaturedGroups());
 	}, [dispatch]);
 
@@ -93,10 +93,6 @@ const Posts = () => {
 		}
 		// eslint-disable-next-line
 	}, [dispatch, sportsFilter]);
-
-	// useEffect(() => {
-	// 	!postsExhausted && dispatch(getPosts(sportsFilter));
-	// }, [dispatch, sportsFilter, postsExhausted]);
 
 	const expandList = () => {
 		!postsExhausted && dispatch(getPosts());
@@ -159,21 +155,19 @@ const Posts = () => {
 					md={3}
 				>
 					<Grid item xs={12} style={{ paddingTop: '10px', width: '100%' }}>
-						{/* {!stats ? (
+						{!stats ? (
 							<Spinner />
 						) : (
 							<div style={{ textAlign: 'center' }}>
 								<h3>Our top statistics!</h3>
-								{Object.entries(stats).map((entry) => (
-									<Typography key={entry[0]} style={{ textAlign: 'center' }}>
-										{`Total ${
-											entry[0].charAt(0).toUpperCase() + entry[0].slice(1)
-										}: ${entry[1]}`}{' '}
+								{Object.keys(stats).map((key) => (
+									<Typography key={key} style={{ textAlign: 'center' }}>
+										{`Total ${key}: ${stats[key]}`}{' '}
 									</Typography>
 								))}
 								<h4>And counting!</h4>
 							</div>
-						)} */}
+						)}
 						{!featuredGroupsLoading && featuredGroups?.length > 0 && (
 							<>
 								<h3 style={{ textAlign: 'center' }}>
