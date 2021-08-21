@@ -23,14 +23,11 @@ export const Methods = {
 export const Request = async (dispatch: Function, requestParams: RequestWrapperProps) => {
   let response: Res = await api(requestParams);
 
-  console.log(`Server request wrapper, ${requestParams.method} '${requestParams.endpoint}' result:`);
-  console.log('response', response);
+  console.log(`${requestParams.method.toUpperCase()} Request => ${requestParams.endpoint}`);
 
   if (response?.data) {
     console.log(response.data);
-  } else if (response) {
-    console.log(`No data, showing status code instead: ${response.status}`);
-  }
+  } 
 
   if (response?.data?.msg) {
     showMessage(i18n.t('common.success'), response.data.msg, 'success');

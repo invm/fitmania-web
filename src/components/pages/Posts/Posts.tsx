@@ -80,8 +80,8 @@ const Posts = () => {
 
 	useEffect(() => {
 		// if (!stats) getStatistics();
-		if (!featuredGroups.length) dispatch(getFeaturedGroups());
-	}, [dispatch, featuredGroups]);
+		dispatch(getFeaturedGroups());
+	}, [dispatch]);
 
 	useEffect(() => {
 		!postsExhausted && dispatch(getPosts(sportsFilter));

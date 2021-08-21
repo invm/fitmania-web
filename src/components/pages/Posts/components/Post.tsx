@@ -22,15 +22,16 @@ const useStyles = makeStyles((theme) => ({
 interface PostItemProps {
   post: IPost;
   user: IUser;
+	commentOpen?: boolean
 }
 
-const Post = ({ post, user }: PostItemProps) => {
+const Post = ({ post, user, commentOpen }: PostItemProps) => {
   const {
     posts: { singlePostId, singlePostLoading },
   } = useSelector((state: typeof RootState) => state);
 
   const classes = useStyles();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(commentOpen ?? false);
   const [commentToggle, setCommentToggle] = useState(false);
   const [editMode, setEditMode] = useState(false);
 

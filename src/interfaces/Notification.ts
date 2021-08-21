@@ -5,6 +5,8 @@ interface INotification {
 	body: string;
 	read: boolean;
 	user: string;
+	created_at: Date;
+	resource: string;
 }
 
 export default INotification;

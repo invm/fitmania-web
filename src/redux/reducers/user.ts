@@ -8,11 +8,9 @@ interface userInitialState {
 	loading: boolean;
 	user: IUser;
 	theme: string;
-	notificationsCount: number;
 }
 
 export const initialState: userInitialState = {
-	notificationsCount: 0,
 	verifyingSession: true,
 	isAuthenticated: false,
 	loading: true,

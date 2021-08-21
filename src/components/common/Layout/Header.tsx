@@ -18,10 +18,9 @@ import {
 	Notifications,
 	MoreVert,
 	ExitToApp,
-	Brightness6,
 } from '@material-ui/icons/';
 import { Link, useHistory } from 'react-router-dom';
-import { changeTheme, clearSearch, logout } from '../../../redux/actions';
+import { clearSearch, logout } from '../../../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../redux';
 
@@ -32,9 +31,10 @@ interface HeaderProps {
 const Header = ({ toggleDrawer }: HeaderProps) => {
 	const classes = useStyles();
 	let history = useHistory();
-	const { isAuthenticated, notificationsCount } = useSelector(
-		(state: typeof RootState) => state.user
-	);
+	const {
+		user: { isAuthenticated },
+		notifications: { count: notificationsCount },
+	} = useSelector((state: typeof RootState) => state);
 	const dispatch = useDispatch();
 	const [titleStyle, setTitleStyle] = useState('block');
 	const [searchQuery, setSearchQuery] = useState('');
@@ -81,19 +81,18 @@ const Header = ({ toggleDrawer }: HeaderProps) => {
 			open={isMobileMenuOpen}
 			onClose={handleMobileMenuClose}
 		>
-			<MenuItem onClick={() => dispatch(changeTheme())}>
-				<IconButton
-					className={classes.link}
-					style={{ margin: '0px' }}
-					edge="end"
-					aria-label="change theme color"
-					aria-controls={menuId}
-					aria-haspopup="true"
-					color="inherit"
-				>
-					<Brightness6 />
-				</IconButton>
-				<p>Change Theme</p>
+			<MenuItem>
+				<Link to="/notifications" className={classes.link}>
+					<IconButton
+						aria-label={`Show ${0} new notifications`}
+						color="inherit"
+					>
+						<Badge badgeContent={notificationsCount} color="secondary">
+							<Notifications />
+						</Badge>
+					</IconButton>
+					<p>Notifications</p>
+				</Link>
 			</MenuItem>
 
 			{isAuthenticated && (
@@ -194,34 +193,21 @@ const Header = ({ toggleDrawer }: HeaderProps) => {
 
 							<div className={classes.grow} />
 							<div className={classes.sectionDesktop}>
-								{/* <IconButton
-                  className={classes.link}
-                  edge="end"
-                  aria-label="change theme color"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={() => dispatch(changeTheme())}
-                >
-                  <Brightness6 />
-                </IconButton> */}
 								{isAuthenticated && (
 									<>
-										{notificationsCount > 0 && (
-											<Link to="/notifications" className={classes.link}>
-												<IconButton
-													aria-label={`Show ${0} new notifications`}
-													color="inherit"
+										<Link to="/notifications" className={classes.link}>
+											<IconButton
+												aria-label={`Show ${0} new notifications`}
+												color="inherit"
+											>
+												<Badge
+													badgeContent={notificationsCount}
+													color="secondary"
 												>
-													<Badge
-														badgeContent={notificationsCount}
-														color="secondary"
-													>
-														<Notifications />
-													</Badge>
-												</IconButton>
-											</Link>
-										)}
+													<Notifications />
+												</Badge>
+											</IconButton>
+										</Link>
 
 										<Link to="/profile" className={classes.link}>
 											<IconButton

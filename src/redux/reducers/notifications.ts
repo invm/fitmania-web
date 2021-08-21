@@ -8,10 +8,6 @@ export interface notificationsInitialState {
 	notificationsLoading: boolean;
 	notificationsExhausted: boolean;
 	offset: number;
-	deleting: {
-		_id: string;
-		loading: boolean;
-	};
 }
 
 export const initialState: notificationsInitialState = {
@@ -20,10 +16,6 @@ export const initialState: notificationsInitialState = {
 	notificationsLoading: false,
 	notificationsExhausted: false,
 	offset: 0,
-	deleting: {
-		_id: '',
-		loading: false,
-	},
 };
 
 export default function state(state = initialState, action: Action) {
@@ -33,6 +25,8 @@ export default function state(state = initialState, action: Action) {
 				...state,
 				count: 0,
 			};
+		case types.RESET_NOTIFICATIONS:
+			return initialState;
 		case types.GET_NOTIFICATIONS_COUNT:
 			return {
 				...state,
@@ -51,7 +45,7 @@ export default function state(state = initialState, action: Action) {
 				offset: action.payload.notificationsExhausted
 					? state.offset
 					: state.offset + 1,
-				notifications: [...state.notifications, ...action.payload],
+				notifications: [...state.notifications, ...action.payload.data],
 			};
 		case types.GET_NOTIFICATIONS_FAIL:
 			return {
@@ -61,10 +55,6 @@ export default function state(state = initialState, action: Action) {
 		case types.DELETE_NOTIFICATION_ATTEMPT:
 			return {
 				...state,
-				deleting: {
-					_id: action.payload,
-					loading: true,
-				},
 			};
 		case types.DELETE_NOTIFICATION_SUCCESS:
 			return {
@@ -72,18 +62,10 @@ export default function state(state = initialState, action: Action) {
 				notifications: [
 					...state.notifications.filter((item) => item._id !== action.payload),
 				],
-				deleting: {
-					_id: null,
-					loading: false,
-				},
 			};
 		case types.DELETE_NOTIFICATION_FAIL:
 			return {
 				...state,
-				deleting: {
-					_id: null,
-					loading: false,
-				},
 			};
 		default:
 			return state;

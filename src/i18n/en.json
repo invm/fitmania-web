@@ -12,6 +12,7 @@
 			"create_event": "Create Event"
 		},
 		"common": {
+			"delete": "Delete",
 			"error": "Error",
 			"success": "Success",
 			"confirm": "Confirm",

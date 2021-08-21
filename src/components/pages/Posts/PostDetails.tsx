@@ -35,7 +35,7 @@ const PostDetails = ({ match, history }: RouteChildrenProps<{ id: string }>) => 
 
   return (
     <PageContainer>
-      {singlePostLoading ? <Spinner /> : <>{!!singlePost?._id && <Post {...{ post: singlePost, user }} />}</>}
+      {singlePostLoading ? <Spinner /> : <>{!!singlePost?._id && <Post commentOpen {...{ post: singlePost, user }} />}</>}
     </PageContainer>
   );
 };

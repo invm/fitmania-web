@@ -6,6 +6,10 @@ import { RootState } from '..';
 
 const NOTIFICATIONS_LIMIT = 10;
 
+export const resetNotifications = () => (dispatch: Function) => {
+	dispatch({ type: types.RESET_NOTIFICATIONS });
+};
+
 export const resetNotificationsCount = () => (dispatch: Function) => {
 	dispatch({ type: types.RESET_NOTIFICATIONS_COUNT });
 };
@@ -46,7 +50,10 @@ export const getNotifications =
 
 			dispatch({
 				type: types.GET_NOTIFICATIONS_SUCCESS,
-				payload: res.data.data,
+				payload: {
+					data: res.data.data,
+					notificationsExhausted: res.data.data.length < NOTIFICATIONS_LIMIT,
+				},
 			});
 		} catch (error) {
 			dispatch({
@@ -71,7 +78,6 @@ export const deleteNotification =
 				type: types.DELETE_NOTIFICATION_SUCCESS,
 				payload: id,
 			});
-			dispatch(getNotifications());
 		} catch (error) {
 			showMessage(i18n.t('common.error'), error?.message, 'error');
 			dispatch({
