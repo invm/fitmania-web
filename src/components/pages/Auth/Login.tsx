@@ -24,39 +24,35 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		height: 'calc(100vh - 64px)',
 		[theme.breakpoints.down('xs')]: {
-			height: 'calc(100vh - 58px)',
-		},
+			height: 'calc(100vh - 58px)'
+		}
 	},
 	image: {
-		backgroundImage:
-			'url(https://source.unsplash.com/random/?group-sports,team-sport,sport,fitness)',
+		backgroundImage: 'url(https://source.unsplash.com/random/?group-sports,team-sport,sport,fitness)',
 		backgroundRepeat: 'no-repeat',
-		backgroundColor:
-			theme.palette.type === 'dark'
-				? theme.palette.grey[900]
-				: theme.palette.grey[50],
+		backgroundColor: theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[50],
 		backgroundSize: 'cover',
-		backgroundPosition: 'center',
+		backgroundPosition: 'center'
 	},
 	paper: {
 		margin: theme.spacing(6, 4),
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 	avatar: {
 		margin: theme.spacing(1),
-		backgroundColor: theme.palette.primary.main,
+		backgroundColor: theme.palette.primary.main
 	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
+		marginTop: theme.spacing(1)
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 		backgroundColor: theme.palette.primary.main,
-		color: 'white',
-	},
+		color: 'white'
+	}
 }));
 
 const Login = ({ history }: RouteChildrenProps<{}>) => {
@@ -64,18 +60,10 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 	const classes = useStyles();
 	const [otpSent, setOtpSent] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const { isAuthenticated } = useSelector(
-		(state: typeof RootState) => state.user
-	);
+	const { isAuthenticated } = useSelector((state: typeof RootState) => state.user);
 	const dispatch = useDispatch();
 
-	const loginHandler = async ({
-		email,
-		otp,
-	}: {
-		email: string;
-		otp?: string;
-	}) => {
+	const loginHandler = async ({ email, otp }: { email: string; otp?: string }) => {
 		setLoading(true);
 		const cb = (success: boolean) => {
 			setLoading(false);
@@ -87,7 +75,7 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 			data: { email },
 			cb,
 			dispatch,
-			...(otp && { otp }),
+			...(otp && { otp })
 		});
 	};
 
@@ -99,10 +87,8 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 	}, [isAuthenticated]);
 
 	const loginSchema = Yup.object().shape({
-		email: Yup.string()
-			.email(t('errors.invalid_email'))
-			.required(t('errors.required_field')),
-		otp: Yup.string().optional(),
+		email: Yup.string().email(t('errors.invalid_email')).required(t('errors.required_field')),
+		otp: Yup.string().optional()
 	});
 
 	return (
@@ -125,19 +111,13 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 					</Typography>
 					<Formik
 						initialValues={{
-							email: 'jdoe@mail.com',
-							otp: '',
+							email: process.env.REACT_APP_ENV === 'development' ? 'jdoe@mail.com' : '',
+							otp: ''
 						}}
 						validationSchema={loginSchema}
 						onSubmit={loginHandler}
 					>
-						{({
-							handleSubmit,
-							values,
-							errors,
-							setFieldTouched,
-							setFieldValue,
-						}) => (
+						{({ handleSubmit, values, errors, setFieldTouched, setFieldValue }) => (
 							<form onSubmit={handleSubmit}>
 								{!otpSent ? (
 									<>
@@ -155,13 +135,7 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 											autoFocus
 											error={!!errors.email}
 										/>
-										<Button
-											fullWidth
-											disabled={loading}
-											type="submit"
-											variant="contained"
-											className={classes.submit}
-										>
+										<Button fullWidth disabled={loading} type="submit" variant="contained" className={classes.submit}>
 											Send One-time-password
 										</Button>
 									</>
@@ -185,12 +159,7 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 													error={!!errors.otp}
 												/>
 											</Grid>
-											<Grid
-												item
-												xs={12}
-												container
-												justifyContent="space-between"
-											>
+											<Grid item xs={12} container justifyContent="space-between">
 												<Grid item xs={12} lg={4} style={{ padding: 4 }}>
 													<Button
 														fullWidth
@@ -234,21 +203,9 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 										</Grid>
 									</>
 								)}
-								<Grid
-									container
-									justifyContent="space-between"
-									alignItems="center"
-								>
-									<Grid
-										item
-										container
-										justifyContent="flex-end"
-										alignItems="center"
-										xs={12}
-									>
-										<Link to="/register">
-											{"Don't have an account? Sign Up"}
-										</Link>
+								<Grid container justifyContent="space-between" alignItems="center">
+									<Grid item container justifyContent="flex-end" alignItems="center" xs={12}>
+										<Link to="/register">{"Don't have an account? Sign Up"}</Link>
 									</Grid>
 								</Grid>
 								<Box mt={5}>
