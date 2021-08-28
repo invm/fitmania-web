@@ -138,7 +138,7 @@ const Posts = () => {
 				</div>
 			</div>
 			<Grid container>
-				<Grid item xs={12} style={{ paddingTop: '10px', width: '100%' }}>
+				<Grid item xs={12} md={3} style={{ paddingTop: '10px', width: '100%' }}>
 					{!stats ? (
 						<Spinner />
 					) : (
