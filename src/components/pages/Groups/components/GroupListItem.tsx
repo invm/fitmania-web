@@ -1,11 +1,4 @@
-import {
-	Button,
-	Card,
-	CardContent,
-	Checkbox,
-	Grid,
-	Typography,
-} from '@material-ui/core';
+import { Button, Card, CardContent, Checkbox, Grid, Typography } from '@material-ui/core';
 import IGroup from '../../../../interfaces/Group';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import { sports } from '../../Posts/Posts';
@@ -18,14 +11,14 @@ interface GroupListItemProps {
 
 const GroupListItem = ({ group }: GroupListItemProps) => {
 	return (
-		<Grid item xs={12} container justifyContent="center">
+		<Grid item xs={12} container justifyContent="center" style={{ marginBottom: 8 }}>
 			<Card style={{ width: '100%' }}>
 				<CardContent>
 					<div
 						style={{
 							display: 'flex',
 							justifyContent: 'space-between',
-							alignItems: 'center',
+							alignItems: 'center'
 						}}
 					>
 						<div style={{ display: 'flex', alignItems: 'center' }}>
@@ -36,7 +29,7 @@ const GroupListItem = ({ group }: GroupListItemProps) => {
 							style={{
 								display: 'flex',
 								justifyContent: 'space-between',
-								alignItems: 'center',
+								alignItems: 'center'
 							}}
 						>
 							<Typography variant="h6" component="span">

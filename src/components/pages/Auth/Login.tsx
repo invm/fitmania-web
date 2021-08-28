@@ -111,7 +111,7 @@ const Login = ({ history }: RouteChildrenProps<{}>) => {
 					</Typography>
 					<Formik
 						initialValues={{
-							email: process.env.REACT_APP_ENV === 'development' ? 'jdoe@mail.com' : '',
+							email: process.env.REACT_APP_ENV === 'development' ? 'imichaelionov@gmail.com' : '',
 							otp: ''
 						}}
 						validationSchema={loginSchema}

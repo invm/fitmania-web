@@ -1,11 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import {
-	Grid,
-	Typography,
-	Checkbox,
-	FormControlLabel,
-	Button,
-} from '@material-ui/core';
+import { Grid, Typography, Checkbox, FormControlLabel, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import heroImage from '../../../assets/crossfit-box.jpg';
@@ -23,7 +17,7 @@ import {
 	SportsSoccer,
 	DirectionsWalk,
 	DirectionsRun,
-	DirectionsBike,
+	DirectionsBike
 } from '@material-ui/icons';
 import { RootState } from '../../../redux';
 import { Spinner } from '../../common';
@@ -41,38 +35,38 @@ export const sports: IObject = {
 	Soccer: <SportsSoccer />,
 	Basketball: <SportsBasketball />,
 	Rugby: <SportsRugby />,
-	Tennis: <SportsBaseball />,
+	Tennis: <SportsBaseball />
 };
 
 const useStyles = makeStyles((theme) => ({
 	textarea: {
 		minWidth: '200px',
-		width: '100%',
+		width: '100%'
 	},
 	list: {
-		padding: theme.spacing(1),
+		padding: theme.spacing(1)
 	},
 	media: {
-		height: 140,
+		height: 140
 	},
 	cardHeader: {
-		padding: '0 8px 0',
+		padding: '0 8px 0'
 	},
 	card: {
 		marginTop: '8px',
 		padding: '12px 8px 12px 8px',
-		width: '100%',
+		width: '100%'
 	},
 	avatar: {
-		backgroundColor: theme.palette.primary.main,
-	},
+		backgroundColor: theme.palette.primary.main
+	}
 }));
 const Posts = () => {
 	const dispatch = useDispatch();
 	const {
 		posts: { posts, postsLoading, postsExhausted, stats },
 		groups: { featuredGroupsLoading, featuredGroups },
-		user: { user },
+		user: { user }
 	} = useSelector((state: typeof RootState) => state);
 
 	const classes = useStyles();
@@ -116,7 +110,7 @@ const Posts = () => {
 							marginBottom: 20,
 							fontWeight: 700,
 							color: 'white',
-							textShadow: '1px 1px #444',
+							textShadow: '1px 1px #444'
 						}}
 					>
 						FitMania! 🏃
@@ -126,7 +120,7 @@ const Posts = () => {
 						style={{
 							marginBottom: 10,
 							color: 'white',
-							textShadow: '1px 1px #444',
+							textShadow: '1px 1px #444'
 						}}
 					>
 						Meet new people with common sport preferences!
@@ -136,7 +130,7 @@ const Posts = () => {
 						style={{
 							marginBottom: 10,
 							color: 'white',
-							textShadow: '1px 1px #444',
+							textShadow: '1px 1px #444'
 						}}
 					>
 						Join local communities, train, play, motivate and progress together!
@@ -144,43 +138,30 @@ const Posts = () => {
 				</div>
 			</div>
 			<Grid container>
-				<Grid
-					container
-					item
-					direction="column"
-					justifyContent="flex-start"
-					alignItems="center"
-					xs={12}
-					sm={4}
-					md={3}
-				>
-					<Grid item xs={12} style={{ paddingTop: '10px', width: '100%' }}>
-						{!stats ? (
-							<Spinner />
-						) : (
-							<div style={{ textAlign: 'center' }}>
-								<h3>Our top statistics!</h3>
-								{Object.keys(stats).map((key) => (
-									<Typography key={key} style={{ textAlign: 'center' }}>
-										{`Total ${key}: ${stats[key]}`}{' '}
-									</Typography>
-								))}
-								<h4>And counting!</h4>
+				<Grid item xs={12} style={{ paddingTop: '10px', width: '100%' }}>
+					{!stats ? (
+						<Spinner />
+					) : (
+						<div style={{ textAlign: 'center' }}>
+							<h3>Our top statistics!</h3>
+							{Object.keys(stats).map((key) => (
+								<Typography key={key} style={{ textAlign: 'center' }}>
+									{`Total ${key}: ${stats[key]}`}{' '}
+								</Typography>
+							))}
+							<h4>And counting!</h4>
+						</div>
+					)}
+					{!featuredGroupsLoading && featuredGroups?.length > 0 && (
+						<>
+							<h3 style={{ textAlign: 'center' }}>Featured groups around the globe!</h3>
+							<div>
+								{featuredGroups.map((group, key) => {
+									return <GroupListItem key={key} {...{ group, user }} />;
+								})}
 							</div>
-						)}
-						{!featuredGroupsLoading && featuredGroups?.length > 0 && (
-							<>
-								<h3 style={{ textAlign: 'center' }}>
-									Featured groups around the globe!
-								</h3>
-								<div>
-									{featuredGroups.map((group, key) => {
-										return <GroupListItem key={key} {...{ group, user }} />;
-									})}
-								</div>
-							</>
-						)}
-					</Grid>
+						</>
+					)}
 				</Grid>
 				<Grid container item xs={12} sm={12} md={9}>
 					<Grid item xs={12} container justifyContent="center">
@@ -206,10 +187,7 @@ const Posts = () => {
 						))}
 						<Grid item xs={12}>
 							<Typography align="center" variant="h5">
-								Showing results for{' '}
-								{sportsFilter.length > 0
-									? sportsFilter.join(', ')
-									: 'all sports'}
+								Showing results for {sportsFilter.length > 0 ? sportsFilter.join(', ') : 'all sports'}
 							</Typography>
 						</Grid>
 					</Grid>
@@ -217,13 +195,7 @@ const Posts = () => {
 						<CreatePost />
 					</Grid>
 					<Grid item xs={12}>
-						<Grid
-							container
-							direction="row"
-							alignItems="center"
-							justifyContent="space-between"
-							className={classes.list}
-						>
+						<Grid container direction="row" alignItems="center" justifyContent="space-between" className={classes.list}>
 							<Grid item xs={12}>
 								{/* {createPostLoading && <Spinner />} */}
 								{posts.map((post) => (
@@ -232,26 +204,14 @@ const Posts = () => {
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid
-						item
-						xs={12}
-						container
-						style={{ marginTop: 30, marginBottom: 30 }}
-						justifyContent="center"
-					>
+					<Grid item xs={12} container style={{ marginTop: 30, marginBottom: 30 }} justifyContent="center">
 						<Button
 							disabled={postsLoading || postsExhausted}
 							variant="contained"
 							onClick={expandList}
 							style={{ height: 40, width: 150 }}
 						>
-							{postsLoading ? (
-								<Spinner size={0.3} />
-							) : postsExhausted ? (
-								'No more posts'
-							) : (
-								'Load More'
-							)}
+							{postsLoading ? <Spinner size={0.3} /> : postsExhausted ? 'No more posts' : 'Load More'}
 						</Button>
 					</Grid>
 				</Grid>
@@ -275,6 +235,6 @@ const styles = {
 		display: 'flex',
 		justifyContent: 'flex-start',
 		marginBottom: 30,
-		marginTop: 30,
-	},
+		marginTop: 30
+	}
 };
