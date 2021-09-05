@@ -20,7 +20,7 @@ The app allows user authentication, post and comment publication. The user may c
 
 - Components
   - App - top level component
-  - Common - shared components user thourghout the app
+  - Common - shared components used thourghout the app
   - Pages
     - Page per use case
 
@@ -56,14 +56,14 @@ Replace all in angle brackets to run locally
 - REACT_APP_API_KEY=<API_KEY> **Meant to keep out malicious traffic**
 - REACT_APP_GOOGLE_API_KEY= **For addresses auto complete**
  
-To run locally
+Run locally
 
 ```
 npm i
 npm start
 ```
 
-To generate static files
+Generate static files
 ```
 npm run build
 ```
