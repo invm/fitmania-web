@@ -1,3 +1,5 @@
+/* Theme declaration for the app */
+
 import { createTheme } from '@material-ui/core/styles';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 

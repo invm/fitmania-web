@@ -1,3 +1,4 @@
+/* Top level component, the root of all evil */
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -22,10 +23,6 @@ const App = () => {
 				<CssBaseline />
 				<Sidebar />
 				<Switch>
-					{/* 
-          <PrivateRoute exact path="/search/:query" component={SearchResults} />
-          <PrivateRoute exact path="/notifications" component={Notifications} />
-					*/}
 					{getRoutes()}
 					<Redirect path="*" to="/404" />
 				</Switch>

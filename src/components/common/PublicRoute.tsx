@@ -1,3 +1,5 @@
+/* A component that meant to prevent authorized traffic from accessing public routes */
+
 import React from 'react';
 import { Route, Redirect, RouteComponentProps, RouteProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';

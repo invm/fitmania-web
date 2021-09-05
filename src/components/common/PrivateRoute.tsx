@@ -1,3 +1,5 @@
+/* A component that meant to prevent unauthorized access to private pages */
+
 import React from 'react';
 import { Route, Redirect, RouteComponentProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
