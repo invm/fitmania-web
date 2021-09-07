@@ -7,16 +7,12 @@ import {
 	IconButton,
 	makeStyles,
 	TextField,
-	Typography,
+	Typography
 } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {
-	createComment,
-	editComment,
-	deleteComment,
-} from '../../../../../redux/actions/posts';
+import { createComment, editComment, deleteComment } from '../../../../../redux/actions/posts';
 import IPost from '../../../../../interfaces/Post';
 import IUser from '../../../../../interfaces/User';
 import { Spinner } from '../../../../common';
@@ -33,23 +29,17 @@ interface PostItemProps {
 const useStyles = makeStyles((theme) => ({
 	textarea: {
 		minWidth: '200px',
-		width: '100%',
+		width: '100%'
 	},
 	avatar: {
-		backgroundColor: theme.palette.primary.main,
+		backgroundColor: theme.palette.primary.main
 	},
 	small: {
-		fontSize: '0.8rem',
-	},
+		fontSize: '0.8rem'
+	}
 }));
 
-const PostCommentSection = ({
-	post,
-	user,
-	commentToggle,
-	setCommentToggle,
-	expanded,
-}: PostItemProps) => {
+const PostCommentSection = ({ post, user, commentToggle, setCommentToggle, expanded }: PostItemProps) => {
 	const classes = useStyles();
 
 	const dispatch = useDispatch();
@@ -87,7 +77,7 @@ const PostCommentSection = ({
 
 	const [commentEditMode, setCommentEditMode] = useState({
 		id: '',
-		editMode: false,
+		editMode: false
 	});
 	const [commentEditText, setCommentEditText] = useState('');
 
@@ -113,10 +103,7 @@ const PostCommentSection = ({
 							{creatingComment ? (
 								<Spinner size={0.3} />
 							) : (
-								<IconButton
-									onClick={handleCommentSend}
-									style={{ marginLeft: '8px' }}
-								>
+								<IconButton onClick={handleCommentSend} style={{ marginLeft: '8px' }}>
 									<Send />
 								</IconButton>
 							)}
@@ -124,60 +111,37 @@ const PostCommentSection = ({
 					</Grid>
 				</CardContent>
 			</Collapse>
-			<Collapse
-				in={expanded && post?.comments?.length > 0}
-				timeout="auto"
-				unmountOnExit
-			>
+			<Collapse in={expanded && post?.comments?.length > 0} timeout="auto" unmountOnExit>
 				<CardContent>
 					{expanded &&
 						post?.comments?.length > 0 &&
 						post?.comments.map((comment) => (
 							<Grid container key={comment._id}>
 								<Grid item container>
-									<Grid>
-										<Link
-											to={
-												comment.user._id === user._id
-													? `/profile`
-													: `/user/${comment.user._id}`
-											}
-										>
-											<Avatar
-												aria-label="user initials"
-												className={classes.avatar}
-											>
-												{comment.user.name[0].toUpperCase()}
-											</Avatar>
-										</Link>
-									</Grid>
-									<Grid style={{ paddingLeft: 10 }}>
-										<Link
-											to={
-												comment.user._id === user._id
-													? `/profile`
-													: `/user/${comment.user._id}`
-											}
-										>
-											<Typography className={classes.small}>
-												{comment.user?.name} {comment.user?.lastname}
-											</Typography>
-										</Link>
+									<Grid item container md={4}>
+										<Grid>
+											<Link to={comment.user._id === user._id ? `/profile` : `/user/${comment.user._id}`}>
+												<Avatar aria-label="user initials" className={classes.avatar}>
+													{comment.user.name[0].toUpperCase()}
+												</Avatar>
+											</Link>
+										</Grid>
+										<Grid style={{ paddingLeft: 10 }}>
+											<Link to={comment.user._id === user._id ? `/profile` : `/user/${comment.user._id}`}>
+												<Typography className={classes.small}>
+													{comment.user?.name} {comment.user?.lastname}
+												</Typography>
+											</Link>
 
-										<Typography className={classes.small}>
-											{new Date(comment.created_at).toLocaleString('en-GB')}
-										</Typography>
+											<Typography className={classes.small}>
+												{new Date(comment.created_at).toLocaleString('en-GB')}
+											</Typography>
+										</Grid>
 									</Grid>
-									<Grid container item xs={12} md={7}>
-										<Grid
-											container
-											alignItems="center"
-											item
-											xs={comment.user._id === user._id ? 8 : 12}
-											sm={10}
-										>
-											{commentEditMode.editMode &&
-											commentEditMode.id === comment._id ? (
+
+									<Grid container item xs={12} md={8}>
+										<Grid container alignItems="center" item xs={comment.user._id === user._id ? 8 : 12} sm={10}>
+											{commentEditMode.editMode && commentEditMode.id === comment._id ? (
 												<TextField
 													className={classes.textarea}
 													id="comment-text"
@@ -190,28 +154,20 @@ const PostCommentSection = ({
 												/>
 											) : (
 												<div style={{ padding: '4px 0 4px' }}>
-													<Typography variant="body1">
-														{comment.text}
-													</Typography>
+													<Typography variant="body1">{comment.text}</Typography>
 												</div>
 											)}
 										</Grid>
 										{comment.user._id === user._id && (
 											<Grid container item xs={4} sm={2}>
 												<Grid item xs={6}>
-													{commentEditMode.editMode &&
-													commentEditMode.id === comment._id ? (
-														<IconButton
-															onClick={handleCommentEditSend}
-															aria-label="save edited comment"
-														>
+													{commentEditMode.editMode && commentEditMode.id === comment._id ? (
+														<IconButton onClick={handleCommentEditSend} aria-label="save edited comment">
 															<Save />
 														</IconButton>
 													) : (
 														<IconButton
-															onClick={() =>
-																handleCommentEdit(comment._id, comment.text)
-															}
+															onClick={() => handleCommentEdit(comment._id, comment.text)}
 															aria-label="settings"
 														>
 															<Edit />
@@ -219,10 +175,7 @@ const PostCommentSection = ({
 													)}
 												</Grid>
 												<Grid item xs={6}>
-													<IconButton
-														onClick={() => handleCommentDelete(comment._id)}
-														aria-label="settings"
-													>
+													<IconButton onClick={() => handleCommentDelete(comment._id)} aria-label="settings">
 														<Delete />
 													</IconButton>
 												</Grid>
